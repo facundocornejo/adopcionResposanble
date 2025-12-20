@@ -19,7 +19,7 @@ const requestsService = {
     if (filters.animalId) params.append('animal_id', filters.animalId)
 
     const queryString = params.toString()
-    const url = queryString ? `/api/solicitudes?${queryString}` : '/api/solicitudes'
+    const url = queryString ? `/api/adoption-requests?${queryString}` : '/api/adoption-requests'
 
     const response = await api.get(url)
     return response.data
@@ -32,7 +32,7 @@ const requestsService = {
    * @returns {Promise<Array>}
    */
   async getRecent(limit = 5) {
-    const response = await api.get(`/api/solicitudes?limit=${limit}&sort=recent`)
+    const response = await api.get(`/api/adoption-requests?limit=${limit}&sort=recent`)
     return response.data
   },
 
@@ -42,7 +42,7 @@ const requestsService = {
    * @returns {Promise<object>}
    */
   async getById(id) {
-    const response = await api.get(`/api/solicitudes/${id}`)
+    const response = await api.get(`/api/adoption-requests/${id}`)
     return response.data
   },
 
@@ -53,7 +53,7 @@ const requestsService = {
    * @returns {Promise<object>}
    */
   async create(data) {
-    const response = await api.post('/api/solicitudes', data)
+    const response = await api.post('/api/adoption-requests', data)
     return response.data
   },
 
@@ -64,7 +64,7 @@ const requestsService = {
    * @returns {Promise<object>}
    */
   async updateStatus(id, estado) {
-    const response = await api.patch(`/api/solicitudes/${id}/estado`, { estado })
+    const response = await api.patch(`/api/adoption-requests/${id}`, { estado })
     return response.data
   },
 
@@ -74,7 +74,7 @@ const requestsService = {
    * @returns {Promise<object>}
    */
   async markAsViewed(id) {
-    const response = await api.patch(`/api/solicitudes/${id}/vista`)
+    const response = await api.patch(`/api/adoption-requests/${id}/vista`)
     return response.data
   },
 
@@ -83,7 +83,7 @@ const requestsService = {
    * @returns {Promise<object>}
    */
   async getStats() {
-    const response = await api.get('/api/solicitudes/stats')
+    const response = await api.get('/api/adoption-requests/stats')
     return response.data
   },
 
@@ -93,7 +93,7 @@ const requestsService = {
    * @returns {Promise<void>}
    */
   async delete(id) {
-    await api.delete(`/api/solicitudes/${id}`)
+    await api.delete(`/api/adoption-requests/${id}`)
   },
 }
 

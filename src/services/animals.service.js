@@ -24,7 +24,7 @@ const animalsService = {
     if (filters.busqueda) params.append('busqueda', filters.busqueda)
 
     const queryString = params.toString()
-    const url = queryString ? `/api/animales?${queryString}` : '/api/animales'
+    const url = queryString ? `/api/animals?${queryString}` : '/api/animals'
 
     const response = await api.get(url)
     return response.data
@@ -45,7 +45,7 @@ const animalsService = {
    * @returns {Promise<object>}
    */
   async getById(id) {
-    const response = await api.get(`/api/animales/${id}`)
+    const response = await api.get(`/api/animals/${id}`)
     return response.data
   },
 
@@ -55,7 +55,7 @@ const animalsService = {
    * @returns {Promise<object>}
    */
   async create(formData) {
-    const response = await api.post('/api/animales', formData, {
+    const response = await api.post('/api/animals', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -70,7 +70,7 @@ const animalsService = {
    * @returns {Promise<object>}
    */
   async update(id, formData) {
-    const response = await api.put(`/api/animales/${id}`, formData, {
+    const response = await api.put(`/api/animals/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -85,7 +85,7 @@ const animalsService = {
    * @returns {Promise<object>}
    */
   async updateStatus(id, estado) {
-    const response = await api.patch(`/api/animales/${id}/estado`, { estado })
+    const response = await api.patch(`/api/animals/${id}/status`, { estado })
     return response.data
   },
 
@@ -95,7 +95,7 @@ const animalsService = {
    * @returns {Promise<void>}
    */
   async delete(id) {
-    await api.delete(`/api/animales/${id}`)
+    await api.delete(`/api/animals/${id}`)
   },
 
   /**
@@ -103,7 +103,7 @@ const animalsService = {
    * @returns {Promise<object>}
    */
   async getStats() {
-    const response = await api.get('/api/animales/stats')
+    const response = await api.get('/api/animals/stats')
     return response.data
   },
 }
