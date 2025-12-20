@@ -12,6 +12,7 @@ import Home from './pages/public/Home'
 // Páginas públicas con lazy loading
 const AnimalDetail = lazy(() => import('./pages/public/AnimalDetail'))
 const AdoptionForm = lazy(() => import('./pages/public/AdoptionForm'))
+const Nosotros = lazy(() => import('./pages/public/Nosotros'))
 
 // Páginas admin con lazy loading (se cargan solo cuando se necesitan)
 const AdminLayout = lazy(() => import('./components/layout/AdminLayout'))
@@ -34,6 +35,7 @@ const AppRouter = () => {
         {/* Rutas públicas */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/animal/:id" element={<AnimalDetail />} />
           <Route path="/animal/:id/adoptar" element={<AdoptionForm />} />
         </Route>

@@ -19,6 +19,7 @@ const Header = () => {
 
   const navItems = [
     { path: '/', label: 'Animales' },
+    { path: '/nosotros', label: 'Nosotros' },
   ]
 
   const isActive = (path) => {
