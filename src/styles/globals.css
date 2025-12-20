@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset y estilos base */
+@layer base {
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Body con fondo cálido */
+  body {
+    @apply bg-cream text-brown-700;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Headings con color marrón oscuro */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-brown-900 font-semibold;
+  }
+
+  /* Links base */
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  /* Focus visible para accesibilidad */
+  :focus-visible {
+    @apply outline-none ring-2 ring-terracotta-500 ring-offset-2;
+  }
+
+  /* Inputs sin zoom en iOS (mínimo 16px) */
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* Componentes personalizados */
+@layer components {
+  /* Container responsivo */
+  .container-app {
+    @apply px-4 md:px-6 lg:max-w-6xl lg:mx-auto;
+  }
+
+  /* Card base */
+  .card {
+    @apply bg-white rounded-xl shadow-sm;
+  }
+
+  /* Badge de estado */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .badge-disponible {
+    @apply bg-sage-100 text-sage-600;
+  }
+
+  .badge-en-proceso {
+    @apply bg-amber-100 text-amber-700;
+  }
+
+  .badge-adoptado {
+    @apply bg-purple-100 text-purple-600;
+  }
+
+  .badge-en-transito {
+    @apply bg-sky-100 text-sky-600;
+  }
+}
+
+/* Utilidades personalizadas */
+@layer utilities {
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area insets para iPhones */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Animación de fade in */
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
