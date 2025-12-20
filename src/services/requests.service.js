@@ -22,7 +22,8 @@ const requestsService = {
     const url = queryString ? `/api/adoption-requests?${queryString}` : '/api/adoption-requests'
 
     const response = await api.get(url)
-    return response.data
+    // La API devuelve { success, data: { requests, total } }
+    return response.data?.data?.requests || response.data?.data || response.data || []
   },
 
   /**
@@ -43,7 +44,8 @@ const requestsService = {
    */
   async getById(id) {
     const response = await api.get(`/api/adoption-requests/${id}`)
-    return response.data
+    // La API devuelve { success, data: { request } }
+    return response.data?.data?.request || response.data?.data || response.data
   },
 
   /**

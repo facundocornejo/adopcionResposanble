@@ -27,7 +27,8 @@ const animalsService = {
     const url = queryString ? `/api/animals?${queryString}` : '/api/animals'
 
     const response = await api.get(url)
-    return response.data
+    // La API devuelve { success, data: { animals, total } }
+    return response.data?.data?.animals || response.data || []
   },
 
   /**
@@ -46,7 +47,8 @@ const animalsService = {
    */
   async getById(id) {
     const response = await api.get(`/api/animals/${id}`)
-    return response.data
+    // La API devuelve { success, data: { animal } }
+    return response.data?.data?.animal || response.data?.data || response.data
   },
 
   /**
