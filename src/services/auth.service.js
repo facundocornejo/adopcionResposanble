@@ -17,13 +17,14 @@ const authService = {
       password,
     })
 
-    const { token, admin } = response.data
+    // La API devuelve { success: true, data: { token, admin, organizacion } }
+    const { token, admin, organizacion } = response.data.data
 
     // Guardar en localStorage
     localStorage.setItem('token', token)
     localStorage.setItem('admin', JSON.stringify(admin))
 
-    return response.data
+    return { token, admin, organizacion }
   },
 
   /**
@@ -62,13 +63,14 @@ const authService = {
   },
 
   /**
-   * Verificar token con el backend (opcional)
+   * Verificar token con el backend
    * Útil para verificar si el token sigue siendo válido
-   * @returns {Promise<object>}
+   * @returns {Promise<object>} - Datos del admin
    */
   async verifyToken() {
     const response = await api.get('/api/auth/me')
-    return response.data
+    // La API devuelve { success: true, data: { admin } }
+    return response.data.data?.admin || response.data.data
   },
 }
 
