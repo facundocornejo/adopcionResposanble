@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, PawPrint, Inbox, Settings, LogOut, Menu, X, ExternalLink } from 'lucide-react'
+import { Home, PawPrint, Inbox, Settings, LogOut, Menu, X, ExternalLink, Building2, Users, Shield } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../../hooks'
@@ -21,6 +21,12 @@ const AdminLayout = () => {
     { path: '/admin/requests', icon: Inbox, label: 'Solicitudes' },
     { path: '/admin/settings', icon: Settings, label: 'Configuración' },
   ]
+
+  // Menú super-admin (solo visible para super admins)
+  const superAdminItems = admin?.es_super_admin ? [
+    { path: '/admin/super/organizations', icon: Building2, label: 'Organizaciones' },
+    { path: '/admin/super/contact-requests', icon: Users, label: 'Solicitudes Rescatistas' },
+  ] : []
 
   const isActive = (item) => {
     if (item.exact) {
@@ -74,10 +80,36 @@ const AdminLayout = () => {
             </Link>
           ))}
 
+          {/* Sección Super Admin */}
+          {superAdminItems.length > 0 && (
+            <>
+              <div className="mt-6 mb-2 px-4">
+                <p className="text-xs text-brown-500 uppercase tracking-wider flex items-center gap-2">
+                  <Shield className="w-3 h-3" />
+                  Super Admin
+                </p>
+              </div>
+              {superAdminItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                    isActive(item)
+                      ? 'bg-amber-500 text-white'
+                      : 'text-brown-300 hover:bg-brown-800 hover:text-white'
+                  }`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              ))}
+            </>
+          )}
+
           {/* Link al sitio público */}
           <Link
             to="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-brown-300 hover:bg-brown-800 hover:text-white transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-brown-300 hover:bg-brown-800 hover:text-white transition-colors mt-4"
           >
             <ExternalLink className="w-5 h-5" />
             <span className="font-medium">Ver sitio</span>

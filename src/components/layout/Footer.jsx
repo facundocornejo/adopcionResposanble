@@ -82,10 +82,18 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/quiero-participar"
+                  className="text-brown-300 hover:text-white transition-colors text-sm"
+                >
+                  Quiero ser rescatista
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/admin/login"
                   className="text-brown-300 hover:text-white transition-colors text-sm"
                 >
-                  Soy rescatista
+                  Iniciar sesión
                 </Link>
               </li>
             </ul>

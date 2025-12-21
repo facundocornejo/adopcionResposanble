@@ -15,6 +15,7 @@ const AdoptionForm = lazy(() => import('./pages/public/AdoptionForm'))
 const Nosotros = lazy(() => import('./pages/public/Nosotros'))
 const FAQ = lazy(() => import('./pages/public/FAQ'))
 const Terminos = lazy(() => import('./pages/public/Terminos'))
+const QuieroParticipar = lazy(() => import('./pages/public/QuieroParticipar'))
 
 // Páginas admin con lazy loading (se cargan solo cuando se necesitan)
 const AdminLayout = lazy(() => import('./components/layout/AdminLayout'))
@@ -25,6 +26,11 @@ const AnimalForm = lazy(() => import('./pages/admin/AnimalForm'))
 const Requests = lazy(() => import('./pages/admin/Requests'))
 const RequestDetail = lazy(() => import('./pages/admin/RequestDetail'))
 const Settings = lazy(() => import('./pages/admin/Settings'))
+
+// Páginas super-admin
+const SuperAdminOrganizations = lazy(() => import('./pages/admin/SuperAdminOrganizations'))
+const SuperAdminNewOrg = lazy(() => import('./pages/admin/SuperAdminNewOrg'))
+const SuperAdminContactRequests = lazy(() => import('./pages/admin/SuperAdminContactRequests'))
 
 // Componente de loading mientras cargan las páginas lazy
 const PageLoader = () => (
@@ -41,6 +47,7 @@ const AppRouter = () => {
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/terminos" element={<Terminos />} />
+          <Route path="/quiero-participar" element={<QuieroParticipar />} />
           <Route path="/animal/:id" element={<AnimalDetail />} />
           <Route path="/animal/:id/adoptar" element={<AdoptionForm />} />
         </Route>
@@ -64,6 +71,10 @@ const AppRouter = () => {
           <Route path="requests" element={<Requests />} />
           <Route path="requests/:id" element={<RequestDetail />} />
           <Route path="settings" element={<Settings />} />
+          {/* Rutas super-admin */}
+          <Route path="super/organizations" element={<SuperAdminOrganizations />} />
+          <Route path="super/organizations/new" element={<SuperAdminNewOrg />} />
+          <Route path="super/contact-requests" element={<SuperAdminContactRequests />} />
         </Route>
 
         {/* 404 - Página no encontrada */}
