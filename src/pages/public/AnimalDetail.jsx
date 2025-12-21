@@ -13,6 +13,8 @@ import {
   Instagram,
   Facebook,
   CreditCard,
+  MessageCircle,
+  Mail,
 } from 'lucide-react'
 import { useAnimal } from '../../hooks'
 import { AnimalGallery } from '../../components/animals'
@@ -242,49 +244,82 @@ const AnimalDetail = () => {
 
           {/* Info del rescatista/organización */}
           <Card>
-            <h3 className="font-semibold text-brown-900 mb-3">
+            <h3 className="text-sm text-brown-500 mb-1">
               Publicado por
             </h3>
-            <div className="space-y-3">
-              <p className="text-brown-700 font-medium">
-                {organizacion?.nombre || animal.publicado_por}
-              </p>
+            <p className="text-xl font-bold text-brown-900 mb-4">
+              {organizacion?.nombre || animal.publicado_por}
+            </p>
 
+            {/* Datos de contacto organizados */}
+            <div className="space-y-3">
+              {/* WhatsApp del rescatista */}
               {animal.contacto_rescatista && (
                 <a
                   href={getWhatsAppLink(animal.contacto_rescatista, `Hola! Vi a ${animal.nombre} en la plataforma de adopción y me gustaría saber más.`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-terracotta-500 hover:text-terracotta-600 flex items-center gap-2 text-sm"
+                  className="flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 rounded-xl transition-colors"
                 >
-                  <Phone className="w-4 h-4" />
-                  {animal.contacto_rescatista}
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <MessageCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-green-700">WhatsApp</p>
+                    <p className="font-medium text-green-800">{animal.contacto_rescatista}</p>
+                  </div>
                 </a>
               )}
 
-              {/* Redes sociales de la organización */}
-              {(organizacion?.instagram || organizacion?.facebook || organizacion?.whatsapp) && (
-                <div className="flex items-center gap-3 pt-2">
-                  {organizacion?.whatsapp && (
-                    <a
-                      href={getWhatsAppLink(organizacion.whatsapp, `Hola! Vi a ${animal.nombre} en la plataforma de adopción.`)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-sage-100 text-sage-600 rounded-lg hover:bg-sage-200 transition-colors"
-                      title="WhatsApp"
-                    >
-                      <Phone className="w-4 h-4" />
-                    </a>
-                  )}
+              {/* WhatsApp de la organización (si es diferente) */}
+              {organizacion?.whatsapp && organizacion.whatsapp !== animal.contacto_rescatista && (
+                <a
+                  href={getWhatsAppLink(organizacion.whatsapp, `Hola! Vi a ${animal.nombre} en la plataforma de adopción.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 rounded-xl transition-colors"
+                >
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <MessageCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-green-700">WhatsApp del refugio</p>
+                    <p className="font-medium text-green-800">{organizacion.whatsapp}</p>
+                  </div>
+                </a>
+              )}
+
+              {/* Email de la organización */}
+              {organizacion?.email && (
+                <a
+                  href={`mailto:${organizacion.email}`}
+                  className="flex items-center gap-3 p-3 bg-brown-50 hover:bg-brown-100 rounded-xl transition-colors"
+                >
+                  <div className="w-10 h-10 bg-brown-400 rounded-full flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-brown-600">Email</p>
+                    <p className="font-medium text-brown-800">{organizacion.email}</p>
+                  </div>
+                </a>
+              )}
+            </div>
+
+            {/* Redes sociales */}
+            {(organizacion?.instagram || organizacion?.facebook) && (
+              <div className="mt-4 pt-4 border-t border-brown-100">
+                <p className="text-xs text-brown-500 mb-2">Redes sociales</p>
+                <div className="flex items-center gap-2">
                   {organizacion?.instagram && (
                     <a
                       href={`https://instagram.com/${organizacion.instagram.replace('@', '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
-                      title="Instagram"
+                      className="flex items-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors text-sm"
                     >
                       <Instagram className="w-4 h-4" />
+                      {organizacion.instagram}
                     </a>
                   )}
                   {organizacion?.facebook && (
@@ -292,15 +327,15 @@ const AnimalDetail = () => {
                       href={organizacion.facebook.startsWith('http') ? organizacion.facebook : `https://facebook.com/${organizacion.facebook}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                      title="Facebook"
+                      className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm"
                     >
                       <Facebook className="w-4 h-4" />
+                      Facebook
                     </a>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </Card>
 
           {/* Sección de donaciones */}
