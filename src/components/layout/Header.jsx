@@ -21,6 +21,7 @@ const Header = () => {
     { path: '/', label: 'Animales' },
     { path: '/nosotros', label: 'Nosotros' },
     { path: '/faq', label: 'FAQ' },
+    { path: '/nosotros#contacto', label: 'Contáctanos' },
   ]
 
   const isActive = (path) => {

@@ -1,9 +1,24 @@
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Heart, Users, Home, Shield } from 'lucide-react'
 
 /**
  * Página "Nosotros" - Información sobre el refugio
  */
 const Nosotros = () => {
+  const location = useLocation()
+
+  // Scroll a la sección si hay un hash en la URL
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash)
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
+    }
+  }, [location])
   const valores = [
     {
       icon: Heart,
@@ -120,7 +135,7 @@ const Nosotros = () => {
       </section>
 
       {/* Contacto */}
-      <section className="py-12 md:py-16 bg-brown-900 text-white">
+      <section id="contacto" className="py-12 md:py-16 bg-brown-900 text-white">
         <div className="container-app text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
             ¿Querés ayudar?
