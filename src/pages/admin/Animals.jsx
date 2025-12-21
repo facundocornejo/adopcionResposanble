@@ -130,7 +130,7 @@ const Animals = () => {
           >
             <option value="">Todas las especies</option>
             {ESPECIES.map(e => (
-              <option key={e} value={e}>{e}s</option>
+              <option key={e.value} value={e.value}>{e.label}s</option>
             ))}
           </select>
           <select
@@ -140,7 +140,7 @@ const Animals = () => {
           >
             <option value="">Todos los estados</option>
             {ESTADOS_ANIMAL.map(e => (
-              <option key={e} value={e}>{e}</option>
+              <option key={e.value} value={e.value}>{e.label}</option>
             ))}
           </select>
         </div>
@@ -227,7 +227,7 @@ const Animals = () => {
                         `}
                       >
                         {ESTADOS_ANIMAL.map(e => (
-                          <option key={e} value={e}>{e}</option>
+                          <option key={e.value} value={e.value}>{e.label}</option>
                         ))}
                       </select>
                     </td>

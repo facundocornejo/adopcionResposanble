@@ -37,9 +37,9 @@ const Dashboard = () => {
         const enProceso = animalsData.filter(a => a.estado === 'En proceso').length
 
         const totalSolicitudes = requestsData.length
-        const nuevas = requestsData.filter(r => r.estado === 'Nueva').length
+        const nuevas = requestsData.filter(r => r.estado_solicitud === 'Nueva').length
         const pendientes = requestsData.filter(r =>
-          r.estado === 'Nueva' || r.estado === 'Contactada'
+          r.estado_solicitud === 'Nueva' || r.estado_solicitud === 'Contactada'
         ).length
 
         setStats({
@@ -54,13 +54,13 @@ const Dashboard = () => {
 
         // Solicitudes recientes (últimas 5)
         const sortedRequests = [...requestsData]
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .sort((a, b) => new Date(b.fecha_solicitud) - new Date(a.fecha_solicitud))
           .slice(0, 5)
         setRecentRequests(sortedRequests)
 
         // Animales recientes (últimos 5)
         const sortedAnimals = [...animalsData]
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion))
           .slice(0, 5)
         setRecentAnimals(sortedAnimals)
 
@@ -159,8 +159,8 @@ const Dashboard = () => {
                     </p>
                   </div>
                   <div className="flex items-center gap-2 ml-3">
-                    <Badge variant={Badge.getRequestVariant(request.estado)} size="sm">
-                      {request.estado}
+                    <Badge variant={Badge.getRequestVariant(request.estado_solicitud)} size="sm">
+                      {request.estado_solicitud}
                     </Badge>
                   </div>
                 </Link>
