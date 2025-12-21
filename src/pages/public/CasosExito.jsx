@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Heart, Search, Building2, Loader2 } from 'lucide-react'
 import CasoExitoCard from '../../components/casosexito/CasoExitoCard'
-import api from '../../api/axios'
+import api from '../../services/api'
 
 /**
  * Página pública de Casos de Éxito

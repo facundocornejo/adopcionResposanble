@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Heart, Upload, X, PartyPopper, Calendar } from 'lucide-react'
 import { toast } from 'react-hot-toast'
-import api from '../../api/axios'
+import api from '../../services/api'
 import { Button, Modal } from '../ui'
 
 /**
