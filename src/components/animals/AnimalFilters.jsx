@@ -7,8 +7,12 @@ import { ESPECIES, TAMANIOS, ESTADOS_ANIMAL } from '../../utils/constants'
 /**
  * Filtros para el catálogo de animales
  * Mobile-first: en móvil se expanden/colapsan
+ * @param {object} filters - Filtros actuales
+ * @param {function} onFilterChange - Callback cuando cambian filtros
+ * @param {number} totalResults - Total de resultados
+ * @param {object} defaultFilters - Filtros por defecto (para el botón limpiar)
  */
-const AnimalFilters = ({ filters, onFilterChange, totalResults }) => {
+const AnimalFilters = ({ filters, onFilterChange, totalResults, defaultFilters = {} }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const handleChange = (key, value) => {
@@ -20,11 +24,16 @@ const AnimalFilters = ({ filters, onFilterChange, totalResults }) => {
       busqueda: '',
       especie: '',
       tamanio: '',
-      estado: '',
+      estado: defaultFilters.estado || '', // Mantener el estado por defecto
     })
   }
 
-  const hasActiveFilters = filters.especie || filters.tamanio || filters.estado
+  // Solo mostrar "limpiar filtros" si hay filtros activos distintos a los por defecto
+  const hasActiveFilters =
+    filters.busqueda ||
+    filters.especie ||
+    filters.tamanio ||
+    (filters.estado && filters.estado !== defaultFilters.estado)
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-4 mb-6">

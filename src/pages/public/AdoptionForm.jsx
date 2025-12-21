@@ -163,23 +163,37 @@ const AdoptionForm = () => {
     setIsSubmitting(true)
 
     try {
-      // Preparar datos para enviar
+      // Construir descripción de convivientes para el backend
+      let viveConDescripcion = `${data.cantidad_convivientes} persona(s)`
+      if (data.hay_ninos && data.edades_ninos) {
+        viveConDescripcion += `, con niños de ${data.edades_ninos}`
+      }
+      if (!data.vivienda_propia) {
+        viveConDescripcion += data.permite_mascotas
+          ? ' (alquila, permite mascotas)'
+          : ' (alquila)'
+      }
+
+      // Preparar datos en el formato que espera el backend
       const formData = {
-        ...data,
-        edad: parseInt(data.edad, 10),
-        cantidad_convivientes: parseInt(data.cantidad_convivientes, 10),
         animal_id: parseInt(id, 10),
-        // Limpiar campos opcionales vacíos
-        edades_ninos: data.hay_ninos ? data.edades_ninos : null,
-        descripcion_otros_animales: data.tiene_otros_animales
-          ? data.descripcion_otros_animales
-          : null,
+        nombre_completo: data.nombre_completo,
+        edad: parseInt(data.edad, 10),
+        email: data.email,
+        telefono_whatsapp: data.telefono_whatsapp,
+        ciudad_zona: data.ciudad_zona,
+        tipo_vivienda: data.tipo_vivienda,
+        vive_solo_acompanado: viveConDescripcion,
+        todos_de_acuerdo: data.todos_de_acuerdo,
+        tiene_otros_animales: data.tiene_otros_animales,
         otros_animales_castrados: data.tiene_otros_animales
-          ? data.otros_animales_castrados
+          ? (data.otros_animales_castrados ? 'Sí' : 'No')
           : null,
-        permite_mascotas: data.vivienda_propia === false
-          ? data.permite_mascotas
-          : null,
+        experiencia_previa: data.experiencia_previa,
+        puede_cubrir_gastos: true, // Asumimos que si llenan el form, pueden cubrir gastos
+        motivacion: data.motivacion,
+        compromiso_castracion: data.compromiso_castracion,
+        acepta_contacto: true,
       }
 
       await requestsService.create(formData)

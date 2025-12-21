@@ -7,6 +7,9 @@ import { Spinner, Alert } from '../../components/ui'
  * Página Home - Catálogo de animales
  * Hero emocional + filtros + grid de cards
  */
+// Filtros por defecto para la página pública
+const DEFAULT_FILTERS = { estado: 'Disponible' }
+
 const Home = () => {
   const {
     animals,
@@ -15,7 +18,7 @@ const Home = () => {
     filters,
     updateFilters,
     total,
-  } = useAnimals({ estado: 'Disponible' }) // Por defecto solo disponibles
+  } = useAnimals(DEFAULT_FILTERS) // Por defecto solo disponibles
 
   return (
     <div>
@@ -55,6 +58,7 @@ const Home = () => {
             filters={filters}
             onFilterChange={updateFilters}
             totalResults={!isLoading ? total : undefined}
+            defaultFilters={DEFAULT_FILTERS}
           />
 
           {/* Estado de carga */}
