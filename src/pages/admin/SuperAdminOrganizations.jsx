@@ -9,7 +9,9 @@ import {
   ToggleLeft,
   ToggleRight,
   Mail,
-  Phone
+  Phone,
+  Trash2,
+  AlertTriangle
 } from 'lucide-react'
 import { Button, Card, Spinner, Alert, Badge } from '../../components/ui'
 import api from '../../services/api'
@@ -21,6 +23,8 @@ const SuperAdminOrganizations = () => {
   const [organizaciones, setOrganizaciones] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [deleteModal, setDeleteModal] = useState({ open: false, org: null })
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const fetchOrganizaciones = async () => {
     try {
@@ -44,6 +48,22 @@ const SuperAdminOrganizations = () => {
       fetchOrganizaciones()
     } catch (err) {
       toast.error(err.response?.data?.error?.message || 'Error al actualizar')
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!deleteModal.org) return
+
+    setIsDeleting(true)
+    try {
+      const response = await api.delete(`/api/super-admin/organizations/${deleteModal.org.id}`)
+      toast.success(response.data.data.message)
+      setDeleteModal({ open: false, org: null })
+      fetchOrganizaciones()
+    } catch (err) {
+      toast.error(err.response?.data?.error?.message || 'Error al eliminar')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -165,6 +185,15 @@ const SuperAdminOrganizations = () => {
                     <ToggleLeft className="w-6 h-6 text-brown-400" />
                   )}
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setDeleteModal({ open: true, org })}
+                  title="Eliminar organización"
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </Button>
               </div>
             </div>
           </Card>
@@ -177,6 +206,56 @@ const SuperAdminOrganizations = () => {
           </Card>
         )}
       </div>
+
+      {/* Modal de confirmación de eliminación */}
+      {deleteModal.open && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="max-w-md w-full">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle className="w-8 h-8 text-red-500" />
+              </div>
+              <h2 className="text-xl font-bold text-brown-900 mb-2">
+                ¿Eliminar organización?
+              </h2>
+              <p className="text-brown-600 mb-4">
+                Estás por eliminar <strong>{deleteModal.org?.nombre}</strong> permanentemente.
+              </p>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-6 text-left">
+                <p className="text-sm text-red-700">
+                  <strong>Esto eliminará:</strong>
+                </p>
+                <ul className="text-sm text-red-600 mt-1 list-disc list-inside">
+                  <li>{deleteModal.org?._count?.animales || 0} animal(es) publicados</li>
+                  <li>Todas las solicitudes de adopción asociadas</li>
+                  <li>{deleteModal.org?._count?.administradores || 0} cuenta(s) de administrador</li>
+                </ul>
+                <p className="text-sm text-red-700 mt-2 font-semibold">
+                  Esta acción no se puede deshacer.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  fullWidth
+                  onClick={() => setDeleteModal({ open: false, org: null })}
+                  disabled={isDeleting}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  fullWidth
+                  onClick={handleDelete}
+                  isLoading={isDeleting}
+                  className="bg-red-500 hover:bg-red-600 text-white"
+                >
+                  Sí, eliminar
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
