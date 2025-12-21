@@ -19,9 +19,9 @@ const Header = () => {
 
   const navItems = [
     { path: '/', label: 'Animales' },
+    { path: '/casos-exito', label: 'Casos de éxito' },
     { path: '/nosotros', label: 'Nosotros' },
     { path: '/faq', label: 'FAQ' },
-    { path: '/nosotros#contacto', label: 'Contáctanos' },
   ]
 
   const isActive = (path) => {

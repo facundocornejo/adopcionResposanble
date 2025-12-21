@@ -16,6 +16,7 @@ const Nosotros = lazy(() => import('./pages/public/Nosotros'))
 const FAQ = lazy(() => import('./pages/public/FAQ'))
 const Terminos = lazy(() => import('./pages/public/Terminos'))
 const QuieroParticipar = lazy(() => import('./pages/public/QuieroParticipar'))
+const CasosExito = lazy(() => import('./pages/public/CasosExito'))
 
 // Páginas admin con lazy loading (se cargan solo cuando se necesitan)
 const AdminLayout = lazy(() => import('./components/layout/AdminLayout'))
@@ -48,6 +49,7 @@ const AppRouter = () => {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/terminos" element={<Terminos />} />
           <Route path="/quiero-participar" element={<QuieroParticipar />} />
+          <Route path="/casos-exito" element={<CasosExito />} />
           <Route path="/animal/:id" element={<AnimalDetail />} />
           <Route path="/animal/:id/adoptar" element={<AdoptionForm />} />
         </Route>

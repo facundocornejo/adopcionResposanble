@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import { animalsService } from '../../services'
 import { ESPECIES, ESTADOS_ANIMAL } from '../../utils/constants'
 import { Button, Badge, Spinner, Alert, Modal, Card } from '../../components/ui'
+import CasoExitoModal from '../../components/admin/CasoExitoModal'
 
 /**
  * Página de gestión de animales (admin)
@@ -27,6 +28,12 @@ const Animals = () => {
     isOpen: false,
     animal: null,
     isDeleting: false,
+  })
+
+  // Modal de caso de éxito (cuando se adopta)
+  const [casoExitoModal, setCasoExitoModal] = useState({
+    isOpen: false,
+    animal: null,
   })
 
   // Cargar animales
@@ -55,9 +62,35 @@ const Animals = () => {
 
   // Cambiar estado de animal
   const handleStatusChange = async (animal, newStatus) => {
+    // Si se cambia a "Adoptado", mostrar modal de caso de éxito
+    if (newStatus === 'Adoptado') {
+      setCasoExitoModal({ isOpen: true, animal: { ...animal, newStatus } })
+      return
+    }
+
     try {
       await animalsService.updateStatus(animal.id, newStatus)
       toast.success(`${animal.nombre} ahora está "${newStatus}"`)
+      fetchAnimals()
+    } catch (err) {
+      toast.error(err.message || 'Error al cambiar estado')
+    }
+  }
+
+  // Manejar cierre del modal de caso de éxito
+  const handleCasoExitoClose = () => {
+    setCasoExitoModal({ isOpen: false, animal: null })
+  }
+
+  // Manejar resultado del modal de caso de éxito
+  const handleCasoExitoSuccess = async (createdCaso) => {
+    const animal = casoExitoModal.animal
+    if (!animal) return
+
+    try {
+      // Siempre actualizar el estado a Adoptado
+      await animalsService.updateStatus(animal.id, 'Adoptado')
+      toast.success(`${animal.nombre} ahora está "Adoptado"`)
       fetchAnimals()
     } catch (err) {
       toast.error(err.message || 'Error al cambiar estado')
@@ -351,6 +384,14 @@ const Animals = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Modal de caso de éxito */}
+      <CasoExitoModal
+        isOpen={casoExitoModal.isOpen}
+        onClose={handleCasoExitoClose}
+        animal={casoExitoModal.animal}
+        onSuccess={handleCasoExitoSuccess}
+      />
     </div>
   )
 }
