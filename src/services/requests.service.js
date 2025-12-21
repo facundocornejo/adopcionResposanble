@@ -66,7 +66,7 @@ const requestsService = {
    * @returns {Promise<object>}
    */
   async updateStatus(id, estado) {
-    const response = await api.patch(`/api/adoption-requests/${id}`, { estado })
+    const response = await api.patch(`/api/adoption-requests/${id}`, { estado_solicitud: estado })
     return response.data
   },
 

@@ -21,9 +21,9 @@ const Requests = () => {
     setError(null)
     try {
       const data = await requestsService.getAll()
-      const sorted = [...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      const sorted = [...data].sort((a, b) => new Date(b.fecha_solicitud) - new Date(a.fecha_solicitud))
       setAllRequests(sorted)
-      setRequests(filterEstado ? sorted.filter(r => r.estado === filterEstado) : sorted)
+      setRequests(filterEstado ? sorted.filter(r => r.estado_solicitud === filterEstado) : sorted)
     } catch (err) {
       setError(err.message || 'Error al cargar solicitudes')
     } finally {
@@ -38,7 +38,7 @@ const Requests = () => {
   // Filtrar cuando cambia el estado
   useEffect(() => {
     if (filterEstado) {
-      setRequests(allRequests.filter(r => r.estado === filterEstado))
+      setRequests(allRequests.filter(r => r.estado_solicitud === filterEstado))
     } else {
       setRequests(allRequests)
     }
@@ -58,10 +58,10 @@ const Requests = () => {
   // Contar por estado
   const counts = {
     all: allRequests.length,
-    Nueva: allRequests.filter(r => r.estado === 'Nueva').length,
-    Contactada: allRequests.filter(r => r.estado === 'Contactada').length,
-    Aprobada: allRequests.filter(r => r.estado === 'Aprobada').length,
-    Rechazada: allRequests.filter(r => r.estado === 'Rechazada').length,
+    Nueva: allRequests.filter(r => r.estado_solicitud === 'Nueva').length,
+    Contactada: allRequests.filter(r => r.estado_solicitud === 'Contactada').length,
+    Aprobada: allRequests.filter(r => r.estado_solicitud === 'Aprobada').length,
+    Rechazada: allRequests.filter(r => r.estado_solicitud === 'Rechazada').length,
   }
 
   return (
@@ -150,8 +150,8 @@ const Requests = () => {
                       <h3 className="font-semibold text-brown-900 truncate">
                         {request.nombre_completo}
                       </h3>
-                      <Badge variant={Badge.getRequestVariant(request.estado)} size="sm">
-                        {request.estado}
+                      <Badge variant={Badge.getRequestVariant(request.estado_solicitud)} size="sm">
+                        {request.estado_solicitud}
                       </Badge>
                     </div>
 
@@ -167,7 +167,7 @@ const Requests = () => {
 
                     <p className="text-xs text-brown-400 mt-2">
                       <Clock className="w-3 h-3 inline mr-1" />
-                      {formatDate(request.created_at)}
+                      {formatDate(request.fecha_solicitud)}
                     </p>
                   </div>
 
@@ -179,7 +179,7 @@ const Requests = () => {
                       </Button>
                     </Link>
 
-                    {request.estado === 'Nueva' && (
+                    {request.estado_solicitud === 'Nueva' && (
                       <Button
                         size="sm"
                         variant="ghost"
@@ -192,7 +192,7 @@ const Requests = () => {
                 </div>
 
                 {/* Quick actions para estados */}
-                {(request.estado === 'Nueva' || request.estado === 'Contactada') && (
+                {(request.estado_solicitud === 'Nueva' || request.estado_solicitud === 'Contactada') && (
                   <div className="flex gap-2 mt-4 pt-4 border-t border-brown-100">
                     <button
                       onClick={() => handleStatusChange(request, 'Aprobada')}

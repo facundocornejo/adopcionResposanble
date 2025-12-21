@@ -24,9 +24,10 @@ const SEXOS = [
   { value: 'Hembra', label: 'Hembra' },
 ]
 
-const ESPECIES_OPTIONS = ESPECIES.map(e => ({ value: e, label: e }))
-const TAMANIOS_OPTIONS = TAMANIOS.map(t => ({ value: t, label: t }))
-const ESTADOS_OPTIONS = ESTADOS_ANIMAL.map(e => ({ value: e, label: e }))
+// ESPECIES, TAMANIOS, ESTADOS_ANIMAL ya son arrays de {value, label}
+const ESPECIES_OPTIONS = ESPECIES
+const TAMANIOS_OPTIONS = TAMANIOS
+const ESTADOS_OPTIONS = ESTADOS_ANIMAL
 
 /**
  * Formulario para crear o editar un animal
@@ -46,7 +47,7 @@ const AnimalForm = () => {
   const [newPhotos, setNewPhotos] = useState([])
   const [photosToDelete, setPhotosToDelete] = useState([])
 
-  // Configurar form
+  // Configurar form con campos que coinciden con la API
   const {
     register,
     handleSubmit,
@@ -60,18 +61,19 @@ const AnimalForm = () => {
       tamanio: '',
       edad_aproximada: '',
       sexo: '',
-      castrado: false,
-      vacunado: false,
-      desparasitado: false,
+      raza_mezcla: '',
+      estado_castracion: false,
+      estado_vacunacion: '',
+      estado_desparasitacion: false,
       estado: 'Disponible',
       descripcion_historia: '',
       necesidades_especiales: '',
-      sociable_perros: null,
-      sociable_gatos: null,
-      sociable_ninos: null,
-      nombre_rescatista: '',
-      telefono_rescatista: '',
-      zona_rescatista: '',
+      socializa_perros: null,
+      socializa_gatos: null,
+      socializa_ninos: null,
+      publicado_por: '',
+      contacto_rescatista: '',
+      foto_principal: '',
     },
   })
 
@@ -87,26 +89,24 @@ const AnimalForm = () => {
             tamanio: animal.tamanio || '',
             edad_aproximada: animal.edad_aproximada || '',
             sexo: animal.sexo || '',
-            castrado: animal.castrado || false,
-            vacunado: animal.vacunado || false,
-            desparasitado: animal.desparasitado || false,
+            raza_mezcla: animal.raza_mezcla || '',
+            estado_castracion: animal.estado_castracion || false,
+            estado_vacunacion: animal.estado_vacunacion || '',
+            estado_desparasitacion: animal.estado_desparasitacion || false,
             estado: animal.estado || 'Disponible',
             descripcion_historia: animal.descripcion_historia || '',
             necesidades_especiales: animal.necesidades_especiales || '',
-            sociable_perros: animal.sociable_perros,
-            sociable_gatos: animal.sociable_gatos,
-            sociable_ninos: animal.sociable_ninos,
-            nombre_rescatista: animal.nombre_rescatista || '',
-            telefono_rescatista: animal.telefono_rescatista || '',
-            zona_rescatista: animal.zona_rescatista || '',
+            socializa_perros: animal.socializa_perros,
+            socializa_gatos: animal.socializa_gatos,
+            socializa_ninos: animal.socializa_ninos,
+            publicado_por: animal.publicado_por || '',
+            contacto_rescatista: animal.contacto_rescatista || '',
+            foto_principal: animal.foto_principal || '',
           })
 
           // Fotos existentes
-          if (animal.fotos?.length > 0) {
-            setExistingPhotos(animal.fotos)
-          } else if (animal.foto_principal) {
-            setExistingPhotos([animal.foto_principal])
-          }
+          const fotos = [animal.foto_principal, animal.foto_2, animal.foto_3, animal.foto_4, animal.foto_5].filter(Boolean)
+          setExistingPhotos(fotos)
         } catch (err) {
           setLoadError(err.message || 'Error al cargar animal')
         } finally {
@@ -157,30 +157,29 @@ const AnimalForm = () => {
     setIsSubmitting(true)
 
     try {
-      const formData = new FormData()
+      // Preparar datos para enviar como JSON
+      const animalData = {
+        ...data,
+        // Asignar fotos existentes a los campos correspondientes
+        foto_principal: existingPhotos[0] || data.foto_principal || null,
+        foto_2: existingPhotos[1] || null,
+        foto_3: existingPhotos[2] || null,
+        foto_4: existingPhotos[3] || null,
+        foto_5: existingPhotos[4] || null,
+      }
 
-      // Agregar datos del formulario
-      Object.keys(data).forEach(key => {
-        if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
-          formData.append(key, data[key])
+      // Limpiar campos vacíos
+      Object.keys(animalData).forEach(key => {
+        if (animalData[key] === '' || animalData[key] === undefined) {
+          animalData[key] = null
         }
       })
 
-      // Agregar fotos nuevas
-      newPhotos.forEach(photo => {
-        formData.append('fotos', photo.file)
-      })
-
-      // En edición, indicar fotos a eliminar
-      if (isEditing && photosToDelete.length > 0) {
-        formData.append('fotos_eliminar', JSON.stringify(photosToDelete))
-      }
-
       if (isEditing) {
-        await animalsService.update(id, formData)
+        await animalsService.update(id, animalData)
         toast.success('Animal actualizado correctamente')
       } else {
-        await animalsService.create(formData)
+        await animalsService.create(animalData)
         toast.success('Animal creado correctamente')
       }
 
@@ -383,15 +382,16 @@ const AnimalForm = () => {
               <div className="space-y-3">
                 <Checkbox
                   label="Castrado/a"
-                  {...register('castrado')}
+                  {...register('estado_castracion')}
                 />
-                <Checkbox
-                  label="Vacunado/a"
-                  {...register('vacunado')}
+                <Input
+                  label="Estado de vacunación"
+                  placeholder="Ej: Al día, Pendiente..."
+                  {...register('estado_vacunacion')}
                 />
                 <Checkbox
                   label="Desparasitado/a"
-                  {...register('desparasitado')}
+                  {...register('estado_desparasitacion')}
                 />
               </div>
             </Card>
@@ -403,17 +403,17 @@ const AnimalForm = () => {
               <div className="space-y-4">
                 <RadioGroup
                   label="¿Sociable con perros?"
-                  name="sociable_perros"
+                  name="socializa_perros"
                   register={register}
                 />
                 <RadioGroup
                   label="¿Sociable con gatos?"
-                  name="sociable_gatos"
+                  name="socializa_gatos"
                   register={register}
                 />
                 <RadioGroup
                   label="¿Sociable con niños?"
-                  name="sociable_ninos"
+                  name="socializa_ninos"
                   register={register}
                 />
               </div>
@@ -425,23 +425,16 @@ const AnimalForm = () => {
 
               <div className="space-y-4">
                 <Input
-                  label="Nombre"
-                  placeholder="Nombre del rescatista"
-                  error={errors.nombre_rescatista?.message}
-                  {...register('nombre_rescatista')}
+                  label="Publicado por"
+                  placeholder="Nombre del refugio o rescatista"
+                  error={errors.publicado_por?.message}
+                  {...register('publicado_por')}
                 />
                 <Input
-                  label="Teléfono"
-                  type="tel"
-                  placeholder="+54 9 343 123-4567"
-                  error={errors.telefono_rescatista?.message}
-                  {...register('telefono_rescatista')}
-                />
-                <Input
-                  label="Zona"
-                  placeholder="Ej: Paraná Centro"
-                  error={errors.zona_rescatista?.message}
-                  {...register('zona_rescatista')}
+                  label="Contacto"
+                  placeholder="Email o teléfono de contacto"
+                  error={errors.contacto_rescatista?.message}
+                  {...register('contacto_rescatista')}
                 />
               </div>
             </Card>

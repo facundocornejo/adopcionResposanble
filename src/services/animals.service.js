@@ -53,30 +53,22 @@ const animalsService = {
 
   /**
    * Crear un nuevo animal (admin)
-   * @param {FormData} formData - Datos del animal incluyendo fotos
+   * @param {object} data - Datos del animal
    * @returns {Promise<object>}
    */
-  async create(formData) {
-    const response = await api.post('/api/animals', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+  async create(data) {
+    const response = await api.post('/api/animals', data)
     return response.data
   },
 
   /**
    * Actualizar un animal (admin)
    * @param {number|string} id - ID del animal
-   * @param {FormData} formData - Datos actualizados
+   * @param {object} data - Datos actualizados
    * @returns {Promise<object>}
    */
-  async update(id, formData) {
-    const response = await api.put(`/api/animals/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+  async update(id, data) {
+    const response = await api.put(`/api/animals/${id}`, data)
     return response.data
   },
 

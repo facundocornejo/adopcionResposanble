@@ -187,17 +187,19 @@ export const animalSchema = z.object({
     errorMap: () => ({ message: 'Seleccioná el sexo' }),
   }),
 
-  castrado: z.boolean({
-    required_error: 'Indicá si está castrado',
-  }),
+  raza_mezcla: z
+    .string()
+    .optional()
+    .nullable(),
 
-  vacunado: z.boolean({
-    required_error: 'Indicá si está vacunado',
-  }),
+  estado_castracion: z.boolean().optional().default(false),
 
-  desparasitado: z.boolean({
-    required_error: 'Indicá si está desparasitado',
-  }),
+  estado_vacunacion: z
+    .string()
+    .optional()
+    .nullable(),
+
+  estado_desparasitacion: z.boolean().optional().default(false),
 
   estado: z.enum(['Disponible', 'En proceso', 'Adoptado', 'En tránsito'], {
     errorMap: () => ({ message: 'Seleccioná un estado' }),
@@ -206,7 +208,7 @@ export const animalSchema = z.object({
   descripcion_historia: z
     .string()
     .min(1, 'La historia es obligatoria')
-    .min(50, 'Contanos más sobre la historia del animal (mínimo 50 caracteres)'),
+    .min(20, 'Contanos más sobre la historia del animal (mínimo 20 caracteres)'),
 
   necesidades_especiales: z
     .string()
@@ -214,23 +216,23 @@ export const animalSchema = z.object({
     .nullable(),
 
   // Socialización
-  sociable_perros: z.boolean().optional().nullable(),
-  sociable_gatos: z.boolean().optional().nullable(),
-  sociable_ninos: z.boolean().optional().nullable(),
+  socializa_perros: z.boolean().optional().nullable(),
+  socializa_gatos: z.boolean().optional().nullable(),
+  socializa_ninos: z.boolean().optional().nullable(),
 
   // Contacto del rescatista
-  nombre_rescatista: z
+  publicado_por: z
     .string()
-    .min(1, 'El nombre del rescatista es obligatorio'),
+    .min(1, 'El nombre del rescatista/refugio es obligatorio'),
 
-  telefono_rescatista: z
+  contacto_rescatista: z
     .string()
-    .min(1, 'El teléfono es obligatorio')
-    .min(8, 'Ingresá un teléfono válido'),
+    .min(1, 'El contacto es obligatorio'),
 
-  zona_rescatista: z
+  foto_principal: z
     .string()
-    .min(1, 'La zona es obligatoria'),
+    .optional()
+    .nullable(),
 })
 
 // ============================================

@@ -25,7 +25,7 @@ const RequestDetail = () => {
       try {
         const data = await requestsService.getById(id)
         setRequest(data)
-        setNewStatus(data.estado)
+        setNewStatus(data.estado_solicitud || 'Nueva')
       } catch (err) {
         setError(err.message || 'Error al cargar solicitud')
       } finally {
@@ -36,12 +36,12 @@ const RequestDetail = () => {
   }, [id])
 
   const handleStatusUpdate = async () => {
-    if (newStatus === request.estado) return
+    if (newStatus === request.estado_solicitud) return
 
     setIsUpdating(true)
     try {
       await requestsService.updateStatus(id, newStatus)
-      setRequest(prev => ({ ...prev, estado: newStatus }))
+      setRequest(prev => ({ ...prev, estado_solicitud: newStatus }))
       toast.success(`Estado actualizado a "${newStatus}"`)
     } catch (err) {
       toast.error(err.message || 'Error al actualizar')
@@ -88,11 +88,11 @@ const RequestDetail = () => {
               {request.nombre_completo}
             </h1>
             <p className="text-brown-500 text-sm mt-1">
-              Solicitud recibida el {formatDate(request.created_at)}
+              Solicitud recibida el {formatDate(request.fecha_solicitud)}
             </p>
           </div>
-          <Badge variant={Badge.getRequestVariant(request.estado)} size="md">
-            {request.estado}
+          <Badge variant={Badge.getRequestVariant(request.estado_solicitud)} size="md">
+            {request.estado_solicitud}
           </Badge>
         </div>
       </div>
@@ -297,7 +297,7 @@ const RequestDetail = () => {
                   className="w-full px-4 py-3 border border-brown-200 rounded-xl focus:outline-none focus:border-terracotta-500 bg-white"
                 >
                   {ESTADOS_SOLICITUD.map(e => (
-                    <option key={e} value={e}>{e}</option>
+                    <option key={e.value} value={e.value}>{e.label}</option>
                   ))}
                 </select>
               </div>
@@ -305,7 +305,7 @@ const RequestDetail = () => {
               <Button
                 onClick={handleStatusUpdate}
                 isLoading={isUpdating}
-                disabled={newStatus === request.estado}
+                disabled={newStatus === request.estado_solicitud}
                 fullWidth
               >
                 Actualizar estado
