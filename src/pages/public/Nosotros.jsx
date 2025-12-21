@@ -204,24 +204,60 @@ const Nosotros = () => {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA - Contáctanos */}
       <section id="contacto" className="py-12 md:py-16 bg-brown-900 text-white">
-        <div className="container-app text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            ¿Estás listo para adoptar?
+        <div className="container-app">
+          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+            ¿Cómo podemos ayudarte?
           </h2>
-          <p className="text-brown-300 mb-6 max-w-xl mx-auto">
-            Explorá los animales disponibles y encontrá a tu próximo compañero de vida.
-            Cada adopción es una segunda oportunidad para un animal que lo necesita.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/"
-              className="px-6 py-3 bg-terracotta-500 text-white rounded-xl font-medium hover:bg-terracotta-600 transition-colors"
-            >
-              Ver animales en adopción
-            </Link>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Opción para adoptar */}
+            <div className="bg-brown-800 rounded-2xl p-6 text-center">
+              <div className="w-14 h-14 bg-terracotta-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Home className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">
+                Quiero adoptar
+              </h3>
+              <p className="text-brown-300 text-sm mb-4">
+                Explorá los animales disponibles y encontrá a tu próximo compañero de vida.
+              </p>
+              <Link
+                to="/"
+                className="inline-block px-6 py-3 bg-terracotta-500 text-white rounded-xl font-medium hover:bg-terracotta-600 transition-colors"
+              >
+                Ver animales en adopción
+              </Link>
+            </div>
+
+            {/* Opción para rescatistas */}
+            <div className="bg-brown-800 rounded-2xl p-6 text-center">
+              <div className="w-14 h-14 bg-sage-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <PawPrint className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">
+                Soy rescatista
+              </h3>
+              <p className="text-brown-300 text-sm mb-4">
+                ¿Tenés un refugio o rescatás animales? Unite a la plataforma y llegá a más adoptantes.
+              </p>
+              <Link
+                to="/quiero-participar"
+                className="inline-block px-6 py-3 bg-sage-500 text-white rounded-xl font-medium hover:bg-sage-600 transition-colors"
+              >
+                Quiero participar
+              </Link>
+            </div>
           </div>
+
+          {/* Email de contacto */}
+          <p className="text-center text-brown-400 text-sm mt-8">
+            ¿Tenés otra consulta? Escribinos a{' '}
+            <a href="mailto:proyectoperritos@hotmail.com" className="text-terracotta-400 hover:text-terracotta-300">
+              proyectoperritos@hotmail.com
+            </a>
+          </p>
         </div>
       </section>
     </div>

@@ -43,7 +43,7 @@ const Footer = () => {
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="mailto:contacto@adopta.com"
+                href="mailto:proyectoperritos@hotmail.com"
                 className="text-brown-400 hover:text-terracotta-500 transition-colors"
                 aria-label="Email"
               >
@@ -107,10 +107,10 @@ const Footer = () => {
               <li>Argentina</li>
               <li>
                 <a
-                  href="mailto:contacto@adopta.com"
+                  href="mailto:proyectoperritos@hotmail.com"
                   className="hover:text-white transition-colors"
                 >
-                  contacto@adopta.com
+                  proyectoperritos@hotmail.com
                 </a>
               </li>
             </ul>
