@@ -59,7 +59,8 @@ const Requests = () => {
   const counts = {
     all: allRequests.length,
     Nueva: allRequests.filter(r => r.estado_solicitud === 'Nueva').length,
-    Contactada: allRequests.filter(r => r.estado_solicitud === 'Contactada').length,
+    Revisada: allRequests.filter(r => r.estado_solicitud === 'Revisada').length,
+    'En evaluación': allRequests.filter(r => r.estado_solicitud === 'En evaluación').length,
     Aprobada: allRequests.filter(r => r.estado_solicitud === 'Aprobada').length,
     Rechazada: allRequests.filter(r => r.estado_solicitud === 'Rechazada').length,
   }
@@ -94,11 +95,18 @@ const Requests = () => {
           Nuevas
         </FilterButton>
         <FilterButton
-          active={filterEstado === 'Contactada'}
-          onClick={() => setFilterEstado('Contactada')}
-          count={counts.Contactada}
+          active={filterEstado === 'Revisada'}
+          onClick={() => setFilterEstado('Revisada')}
+          count={counts.Revisada}
         >
-          Contactadas
+          Revisadas
+        </FilterButton>
+        <FilterButton
+          active={filterEstado === 'En evaluación'}
+          onClick={() => setFilterEstado('En evaluación')}
+          count={counts['En evaluación']}
+        >
+          En evaluación
         </FilterButton>
         <FilterButton
           active={filterEstado === 'Aprobada'}
@@ -183,17 +191,24 @@ const Requests = () => {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => handleStatusChange(request, 'Contactada')}
+                        onClick={() => handleStatusChange(request, 'Revisada')}
                       >
-                        Marcar contactada
+                        Marcar revisada
                       </Button>
                     )}
                   </div>
                 </div>
 
                 {/* Quick actions para estados */}
-                {(request.estado_solicitud === 'Nueva' || request.estado_solicitud === 'Contactada') && (
-                  <div className="flex gap-2 mt-4 pt-4 border-t border-brown-100">
+                {(request.estado_solicitud === 'Nueva' || request.estado_solicitud === 'Revisada') && (
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-brown-100">
+                    <button
+                      onClick={() => handleStatusChange(request, 'En evaluación')}
+                      className="flex items-center gap-1 px-3 py-1.5 text-sm text-sky-600 hover:bg-sky-50 rounded-lg transition-colors"
+                    >
+                      <Clock className="w-4 h-4" />
+                      En evaluación
+                    </button>
                     <button
                       onClick={() => handleStatusChange(request, 'Aprobada')}
                       className="flex items-center gap-1 px-3 py-1.5 text-sm text-sage-600 hover:bg-sage-50 rounded-lg transition-colors"

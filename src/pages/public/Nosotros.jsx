@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Heart, Users, Home, Shield } from 'lucide-react'
+import { useLocation, Link } from 'react-router-dom'
+import { Heart, Users, Home, Shield, Handshake, PawPrint } from 'lucide-react'
 
 /**
- * Página "Nosotros" - Información sobre el refugio
+ * Página "Nosotros" - Información sobre la plataforma
  */
 const Nosotros = () => {
   const location = useLocation()
@@ -19,26 +19,27 @@ const Nosotros = () => {
       }
     }
   }, [location])
+
   const valores = [
     {
-      icon: Heart,
-      titulo: 'Amor por los animales',
-      descripcion: 'Cada animal merece una segunda oportunidad y un hogar lleno de amor.'
+      icon: Handshake,
+      titulo: 'Conexión directa',
+      descripcion: 'Conectamos rescatistas y refugios con familias que buscan adoptar de manera responsable.'
     },
     {
       icon: Shield,
       titulo: 'Adopción responsable',
-      descripcion: 'Evaluamos cada solicitud para asegurar el bienestar del animal y la familia.'
+      descripcion: 'Facilitamos un proceso de adopción transparente que prioriza el bienestar animal.'
     },
     {
       icon: Users,
-      titulo: 'Comunidad',
-      descripcion: 'Trabajamos junto a voluntarios y familias comprometidas con la causa.'
+      titulo: 'Comunidad solidaria',
+      descripcion: 'Unimos a rescatistas, voluntarios y familias comprometidas con la causa animal.'
     },
     {
-      icon: Home,
-      titulo: 'Hogares felices',
-      descripcion: 'Nuestro objetivo es encontrar el hogar perfecto para cada animal.'
+      icon: Heart,
+      titulo: 'Segundas oportunidades',
+      descripcion: 'Cada animal merece un hogar lleno de amor. Ayudamos a que eso sea posible.'
     }
   ]
 
@@ -48,35 +49,104 @@ const Nosotros = () => {
       <section className="bg-gradient-to-br from-terracotta-500 to-terracotta-600 text-white py-16 md:py-24">
         <div className="container-app text-center">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            Sobre Nosotros
+            Adopción Responsable
           </h1>
           <p className="text-lg md:text-xl text-terracotta-100 max-w-2xl mx-auto">
-            Somos un refugio dedicado a rescatar, rehabilitar y encontrar hogares
-            amorosos para animales abandonados.
+            Una plataforma que conecta rescatistas y refugios con familias
+            que buscan darle un hogar a un animal en situación de calle.
           </p>
         </div>
       </section>
 
-      {/* Misión */}
+      {/* Qué somos */}
       <section className="py-12 md:py-16">
         <div className="container-app">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-brown-900 mb-6">
-              Nuestra Misión
+              ¿Qué es esta plataforma?
             </h2>
+            <p className="text-brown-600 text-lg leading-relaxed mb-4">
+              <span className="font-semibold text-terracotta-500">Adopción Responsable</span> es
+              una plataforma gratuita que facilita la conexión entre quienes rescatan animales
+              de la calle y las familias que desean adoptar.
+            </p>
             <p className="text-brown-600 text-lg leading-relaxed">
-              En <span className="font-semibold text-terracotta-500">Refugio Patitas Felices</span>,
-              creemos que cada animal merece una vida digna. Desde 2015, hemos rescatado y
-              rehabilitado a cientos de perros y gatos que fueron abandonados o maltratados,
-              brindándoles atención veterinaria, amor y la oportunidad de encontrar una familia
-              que los adopte de manera responsable.
+              Nuestro objetivo es simplificar el proceso de adopción, brindando visibilidad
+              a los animales que buscan hogar y permitiendo que los rescatistas gestionen
+              las solicitudes de manera organizada.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Valores */}
+      {/* Cómo funciona */}
       <section className="py-12 md:py-16 bg-white">
+        <div className="container-app">
+          <h2 className="text-2xl md:text-3xl font-bold text-brown-900 text-center mb-10">
+            ¿Cómo funciona?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Para rescatistas */}
+            <div className="bg-sage-50 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-sage-500 text-white rounded-full flex items-center justify-center mb-4">
+                <PawPrint className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-brown-900 mb-3">
+                Para Rescatistas y Refugios
+              </h3>
+              <ul className="space-y-2 text-brown-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-sage-500 mt-1">•</span>
+                  Publicá los animales que tenés en adopción
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-sage-500 mt-1">•</span>
+                  Recibí solicitudes de adopción organizadas
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-sage-500 mt-1">•</span>
+                  Evaluá a los posibles adoptantes desde un panel
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-sage-500 mt-1">•</span>
+                  Contactá directamente por WhatsApp o email
+                </li>
+              </ul>
+            </div>
+
+            {/* Para adoptantes */}
+            <div className="bg-terracotta-50 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-terracotta-500 text-white rounded-full flex items-center justify-center mb-4">
+                <Home className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-brown-900 mb-3">
+                Para Familias Adoptantes
+              </h3>
+              <ul className="space-y-2 text-brown-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-terracotta-500 mt-1">•</span>
+                  Explorá animales disponibles para adopción
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-terracotta-500 mt-1">•</span>
+                  Filtrá por especie, tamaño y características
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-terracotta-500 mt-1">•</span>
+                  Completá el formulario de adopción online
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-terracotta-500 mt-1">•</span>
+                  El rescatista te contactará para coordinar
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Valores */}
+      <section className="py-12 md:py-16">
         <div className="container-app">
           <h2 className="text-2xl md:text-3xl font-bold text-brown-900 text-center mb-10">
             Nuestros Valores
@@ -85,7 +155,7 @@ const Nosotros = () => {
             {valores.map((valor, index) => (
               <div
                 key={index}
-                className="bg-warm-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+                className="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition-shadow border border-brown-100"
               >
                 <div className="w-14 h-14 bg-terracotta-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <valor.icon className="w-7 h-7 text-terracotta-500" />
@@ -103,7 +173,7 @@ const Nosotros = () => {
       </section>
 
       {/* Proceso de Adopción */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container-app">
           <h2 className="text-2xl md:text-3xl font-bold text-brown-900 text-center mb-10">
             Proceso de Adopción
@@ -112,11 +182,11 @@ const Nosotros = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { paso: '1', titulo: 'Elegí tu compañero', desc: 'Explorá los animales disponibles y encontrá el que mejor se adapte a tu familia.' },
-                { paso: '2', titulo: 'Completá el formulario', desc: 'Respondé algunas preguntas para que podamos conocerte mejor.' },
-                { paso: '3', titulo: 'Conocé al animal', desc: 'Coordinamos una visita para que se conozcan antes de la adopción.' }
+                { paso: '2', titulo: 'Completá el formulario', desc: 'Respondé algunas preguntas para que el rescatista pueda conocerte mejor.' },
+                { paso: '3', titulo: 'Coordiná la adopción', desc: 'El rescatista te contactará para coordinar una visita y conocer al animal.' }
               ].map((item, index) => (
                 <div key={index} className="relative">
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-brown-100">
+                  <div className="bg-warm-50 rounded-2xl p-6 border border-brown-100">
                     <div className="w-10 h-10 bg-terracotta-500 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">
                       {item.paso}
                     </div>
@@ -134,29 +204,23 @@ const Nosotros = () => {
         </div>
       </section>
 
-      {/* Contacto */}
+      {/* CTA */}
       <section id="contacto" className="py-12 md:py-16 bg-brown-900 text-white">
         <div className="container-app text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            ¿Querés ayudar?
+            ¿Estás listo para adoptar?
           </h2>
           <p className="text-brown-300 mb-6 max-w-xl mx-auto">
-            Podés colaborar como voluntario, haciendo donaciones o simplemente
-            compartiendo nuestras publicaciones para dar visibilidad a los animales.
+            Explorá los animales disponibles y encontrá a tu próximo compañero de vida.
+            Cada adopción es una segunda oportunidad para un animal que lo necesita.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="mailto:contacto@patitasfelices.org"
+            <Link
+              to="/"
               className="px-6 py-3 bg-terracotta-500 text-white rounded-xl font-medium hover:bg-terracotta-600 transition-colors"
             >
-              Contactanos
-            </a>
-            <a
-              href="/"
-              className="px-6 py-3 bg-white text-brown-900 rounded-xl font-medium hover:bg-brown-50 transition-colors"
-            >
-              Ver animales
-            </a>
+              Ver animales en adopción
+            </Link>
           </div>
         </div>
       </section>

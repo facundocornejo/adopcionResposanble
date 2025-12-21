@@ -35,7 +35,8 @@ export const ESTADOS_ANIMAL = [
 
 export const ESTADOS_SOLICITUD = [
   { value: 'Nueva', label: 'Nueva', color: 'blue' },
-  { value: 'Contactada', label: 'Contactada', color: 'amber' },
+  { value: 'Revisada', label: 'Revisada', color: 'amber' },
+  { value: 'En evaluación', label: 'En evaluación', color: 'sky' },
   { value: 'Aprobada', label: 'Aprobada', color: 'sage' },
   { value: 'Rechazada', label: 'Rechazada', color: 'red' },
 ]
