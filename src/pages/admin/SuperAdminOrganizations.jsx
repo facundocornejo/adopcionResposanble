@@ -24,7 +24,7 @@ const SuperAdminOrganizations = () => {
 
   const fetchOrganizaciones = async () => {
     try {
-      const response = await api.get('/super-admin/organizations')
+      const response = await api.get('/api/super-admin/organizations')
       setOrganizaciones(response.data.data.organizaciones)
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Error al cargar organizaciones')
@@ -39,7 +39,7 @@ const SuperAdminOrganizations = () => {
 
   const handleToggle = async (id) => {
     try {
-      const response = await api.put(`/super-admin/organizations/${id}/toggle`)
+      const response = await api.put(`/api/super-admin/organizations/${id}/toggle`)
       toast.success(response.data.data.message)
       fetchOrganizaciones()
     } catch (err) {

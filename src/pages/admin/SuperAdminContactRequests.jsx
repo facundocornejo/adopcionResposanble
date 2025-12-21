@@ -27,7 +27,7 @@ const SuperAdminContactRequests = () => {
   const fetchSolicitudes = async () => {
     try {
       const params = filter ? `?estado=${filter}` : ''
-      const response = await api.get(`/super-admin/contact-requests${params}`)
+      const response = await api.get(`/api/super-admin/contact-requests${params}`)
       setSolicitudes(response.data.data.solicitudes)
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Error al cargar solicitudes')
@@ -42,7 +42,7 @@ const SuperAdminContactRequests = () => {
 
   const handleUpdateStatus = async (id, estado) => {
     try {
-      await api.put(`/super-admin/contact-requests/${id}`, { estado })
+      await api.put(`/api/super-admin/contact-requests/${id}`, { estado })
       toast.success(`Solicitud marcada como ${estado.toLowerCase()}`)
       fetchSolicitudes()
     } catch (err) {

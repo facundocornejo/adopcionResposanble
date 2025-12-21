@@ -35,7 +35,7 @@ const QuieroParticipar = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true)
     try {
-      await api.post('/contact-requests', data)
+      await api.post('/api/contact-requests', data)
       setIsSuccess(true)
       toast.success('¡Solicitud enviada correctamente!')
     } catch (error) {

@@ -31,7 +31,7 @@ const SuperAdminNewOrg = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true)
     try {
-      const response = await api.post('/super-admin/organizations', data)
+      const response = await api.post('/api/super-admin/organizations', data)
       setCreatedData(response.data.data)
       toast.success('Organización creada correctamente')
     } catch (error) {
