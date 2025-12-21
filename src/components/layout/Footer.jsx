@@ -74,6 +74,14 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/faq"
+                  className="text-brown-300 hover:text-white transition-colors text-sm"
+                >
+                  Preguntas frecuentes
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/admin/login"
                   className="text-brown-300 hover:text-white transition-colors text-sm"
                 >
@@ -105,13 +113,19 @@ const Footer = () => {
       {/* Barra inferior */}
       <div className="border-t border-brown-800">
         <div className="container-app py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-2 text-sm text-brown-400">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-brown-400">
             <p>
-              © {currentYear} Adopta. Todos los derechos reservados.
+              © {currentYear} Adopción Responsable. Todos los derechos reservados.
             </p>
-            <p className="flex items-center gap-1">
-              Hecho con <Heart className="w-4 h-4 text-terracotta-500" /> para los animales
-            </p>
+            <div className="flex items-center gap-4">
+              <Link to="/terminos" className="hover:text-white transition-colors">
+                Términos y Condiciones
+              </Link>
+              <span className="text-brown-600">|</span>
+              <p className="flex items-center gap-1">
+                Hecho con <Heart className="w-4 h-4 text-terracotta-500" /> para los animales
+              </p>
+            </div>
           </div>
         </div>
       </div>

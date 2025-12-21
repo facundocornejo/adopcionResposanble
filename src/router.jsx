@@ -14,6 +14,7 @@ const AnimalDetail = lazy(() => import('./pages/public/AnimalDetail'))
 const AdoptionForm = lazy(() => import('./pages/public/AdoptionForm'))
 const Nosotros = lazy(() => import('./pages/public/Nosotros'))
 const FAQ = lazy(() => import('./pages/public/FAQ'))
+const Terminos = lazy(() => import('./pages/public/Terminos'))
 
 // Páginas admin con lazy loading (se cargan solo cuando se necesitan)
 const AdminLayout = lazy(() => import('./components/layout/AdminLayout'))
@@ -23,6 +24,7 @@ const Animals = lazy(() => import('./pages/admin/Animals'))
 const AnimalForm = lazy(() => import('./pages/admin/AnimalForm'))
 const Requests = lazy(() => import('./pages/admin/Requests'))
 const RequestDetail = lazy(() => import('./pages/admin/RequestDetail'))
+const Settings = lazy(() => import('./pages/admin/Settings'))
 
 // Componente de loading mientras cargan las páginas lazy
 const PageLoader = () => (
@@ -38,6 +40,7 @@ const AppRouter = () => {
           <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/terminos" element={<Terminos />} />
           <Route path="/animal/:id" element={<AnimalDetail />} />
           <Route path="/animal/:id/adoptar" element={<AdoptionForm />} />
         </Route>
@@ -60,6 +63,7 @@ const AppRouter = () => {
           <Route path="animals/:id/edit" element={<AnimalForm />} />
           <Route path="requests" element={<Requests />} />
           <Route path="requests/:id" element={<RequestDetail />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* 404 - Página no encontrada */}

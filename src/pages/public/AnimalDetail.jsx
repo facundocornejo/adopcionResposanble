@@ -10,10 +10,14 @@ import {
   Cat,
   Check,
   X,
+  Instagram,
+  Facebook,
+  CreditCard,
 } from 'lucide-react'
 import { useAnimal } from '../../hooks'
 import { AnimalGallery } from '../../components/animals'
 import { Button, Badge, Spinner, Alert, Card } from '../../components/ui'
+import { getWhatsAppLink } from '../../utils/formatters'
 
 /**
  * Página de detalle de un animal
@@ -67,8 +71,9 @@ const AnimalDetail = () => {
   }
 
   // Preparar datos
-  const fotos = animal.fotos || (animal.foto_principal ? [animal.foto_principal] : [])
+  const fotos = [animal.foto_principal, animal.foto_2, animal.foto_3, animal.foto_4, animal.foto_5].filter(Boolean)
   const EspecieIcon = animal.especie === 'Perro' ? Dog : Cat
+  const organizacion = animal.organizacion
 
   return (
     <div className="container-app py-6 md:py-8">
@@ -103,17 +108,9 @@ const AnimalDetail = () => {
                 variant={Badge.getAnimalVariant(animal.estado)}
                 size="md"
               >
-                {animal.estado}
+                {animal.estado === 'En transito' ? 'En tránsito' : animal.estado}
               </Badge>
             </div>
-
-            {/* Ubicación */}
-            {animal.zona_rescatista && (
-              <div className="flex items-center gap-2 text-brown-600 mb-6">
-                <MapPin className="w-4 h-4" />
-                <span>{animal.zona_rescatista}</span>
-              </div>
-            )}
           </div>
 
           {/* Historia */}
@@ -145,46 +142,46 @@ const AnimalDetail = () => {
                 value={animal.edad_aproximada}
               />
               <InfoItem
-                icon={animal.castrado ? <Check className="w-5 h-5 text-sage-500" /> : <X className="w-5 h-5 text-brown-400" />}
+                icon={animal.estado_castracion ? <Check className="w-5 h-5 text-sage-500" /> : <X className="w-5 h-5 text-brown-400" />}
                 label="Castrado"
-                value={animal.castrado ? 'Sí' : 'No'}
+                value={animal.estado_castracion ? 'Sí' : 'No'}
               />
               <InfoItem
-                icon={animal.vacunado ? <Check className="w-5 h-5 text-sage-500" /> : <X className="w-5 h-5 text-brown-400" />}
+                icon={animal.estado_vacunacion ? <Check className="w-5 h-5 text-sage-500" /> : <X className="w-5 h-5 text-brown-400" />}
                 label="Vacunado"
-                value={animal.vacunado ? 'Sí' : 'No'}
+                value={animal.estado_vacunacion || 'Sin info'}
               />
               <InfoItem
-                icon={animal.desparasitado ? <Check className="w-5 h-5 text-sage-500" /> : <X className="w-5 h-5 text-brown-400" />}
+                icon={animal.estado_desparasitacion ? <Check className="w-5 h-5 text-sage-500" /> : <X className="w-5 h-5 text-brown-400" />}
                 label="Desparasitado"
-                value={animal.desparasitado ? 'Sí' : 'No'}
+                value={animal.estado_desparasitacion ? 'Sí' : 'No'}
               />
             </div>
           </Card>
 
           {/* Socialización */}
-          {(animal.sociable_perros !== null || animal.sociable_gatos !== null || animal.sociable_ninos !== null) && (
+          {(animal.socializa_perros !== null || animal.socializa_gatos !== null || animal.socializa_ninos !== null) && (
             <Card>
               <h2 className="text-xl font-semibold text-brown-900 mb-4">
                 Socialización
               </h2>
               <div className="flex flex-wrap gap-3">
-                {animal.sociable_perros !== null && (
+                {animal.socializa_perros !== null && (
                   <SocializationBadge
                     label="Perros"
-                    value={animal.sociable_perros}
+                    value={animal.socializa_perros}
                   />
                 )}
-                {animal.sociable_gatos !== null && (
+                {animal.socializa_gatos !== null && (
                   <SocializationBadge
                     label="Gatos"
-                    value={animal.sociable_gatos}
+                    value={animal.socializa_gatos}
                   />
                 )}
-                {animal.sociable_ninos !== null && (
+                {animal.socializa_ninos !== null && (
                   <SocializationBadge
                     label="Niños"
-                    value={animal.sociable_ninos}
+                    value={animal.socializa_ninos}
                   />
                 )}
               </div>
@@ -208,7 +205,7 @@ const AnimalDetail = () => {
         <div className="space-y-6">
           {/* Card de adopción */}
           <Card className="sticky top-24">
-            {animal.estado === 'Disponible' ? (
+            {animal.estado === 'Disponible' || animal.estado === 'En transito' ? (
               <>
                 <div className="text-center mb-4">
                   <Heart className="w-12 h-12 text-terracotta-500 mx-auto mb-2" />
@@ -243,30 +240,97 @@ const AnimalDetail = () => {
             )}
           </Card>
 
-          {/* Contacto del rescatista */}
-          {animal.nombre_rescatista && (
-            <Card>
-              <h3 className="font-semibold text-brown-900 mb-3">
-                Contacto del rescatista
-              </h3>
-              <div className="space-y-2 text-sm">
-                <p className="text-brown-700">{animal.nombre_rescatista}</p>
-                {animal.zona_rescatista && (
-                  <p className="text-brown-500 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    {animal.zona_rescatista}
-                  </p>
-                )}
-                {animal.telefono_rescatista && (
-                  <a
-                    href={`tel:${animal.telefono_rescatista}`}
-                    className="text-terracotta-500 hover:text-terracotta-600 flex items-center gap-2"
-                  >
-                    <Phone className="w-4 h-4" />
-                    {animal.telefono_rescatista}
-                  </a>
-                )}
+          {/* Info del rescatista/organización */}
+          <Card>
+            <h3 className="font-semibold text-brown-900 mb-3">
+              Publicado por
+            </h3>
+            <div className="space-y-3">
+              <p className="text-brown-700 font-medium">
+                {organizacion?.nombre || animal.publicado_por}
+              </p>
+
+              {animal.contacto_rescatista && (
+                <a
+                  href={getWhatsAppLink(animal.contacto_rescatista, `Hola! Vi a ${animal.nombre} en la plataforma de adopción y me gustaría saber más.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-terracotta-500 hover:text-terracotta-600 flex items-center gap-2 text-sm"
+                >
+                  <Phone className="w-4 h-4" />
+                  {animal.contacto_rescatista}
+                </a>
+              )}
+
+              {/* Redes sociales de la organización */}
+              {(organizacion?.instagram || organizacion?.facebook || organizacion?.whatsapp) && (
+                <div className="flex items-center gap-3 pt-2">
+                  {organizacion?.whatsapp && (
+                    <a
+                      href={getWhatsAppLink(organizacion.whatsapp, `Hola! Vi a ${animal.nombre} en la plataforma de adopción.`)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-sage-100 text-sage-600 rounded-lg hover:bg-sage-200 transition-colors"
+                      title="WhatsApp"
+                    >
+                      <Phone className="w-4 h-4" />
+                    </a>
+                  )}
+                  {organizacion?.instagram && (
+                    <a
+                      href={`https://instagram.com/${organizacion.instagram.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
+                      title="Instagram"
+                    >
+                      <Instagram className="w-4 h-4" />
+                    </a>
+                  )}
+                  {organizacion?.facebook && (
+                    <a
+                      href={organizacion.facebook.startsWith('http') ? organizacion.facebook : `https://facebook.com/${organizacion.facebook}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                      title="Facebook"
+                    >
+                      <Facebook className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          </Card>
+
+          {/* Sección de donaciones */}
+          {(organizacion?.donacion_alias || organizacion?.donacion_info) && (
+            <Card className="bg-amber-50 border-amber-200">
+              <div className="flex items-center gap-2 mb-3">
+                <CreditCard className="w-5 h-5 text-amber-600" />
+                <h3 className="font-semibold text-brown-900">
+                  Ayudá con una donación
+                </h3>
               </div>
+              <p className="text-sm text-brown-600 mb-3">
+                Tu aporte ayuda a cubrir los gastos veterinarios y de cuidado de los animales rescatados.
+              </p>
+              {organizacion?.donacion_alias && (
+                <div className="bg-white rounded-lg p-3 mb-2">
+                  <p className="text-xs text-brown-500 mb-1">Alias de transferencia:</p>
+                  <p className="font-mono font-medium text-brown-900 select-all">
+                    {organizacion.donacion_alias}
+                  </p>
+                </div>
+              )}
+              {organizacion?.donacion_info && (
+                <p className="text-sm text-brown-600 whitespace-pre-line">
+                  {organizacion.donacion_info}
+                </p>
+              )}
+              <p className="text-xs text-brown-400 mt-3 italic">
+                Las donaciones son voluntarias y van directamente al rescatista. Esta plataforma no gestiona ni se responsabiliza por las mismas.
+              </p>
             </Card>
           )}
         </div>

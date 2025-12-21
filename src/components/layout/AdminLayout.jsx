@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, PawPrint, Inbox, LogOut, Menu, X, ExternalLink } from 'lucide-react'
+import { Home, PawPrint, Inbox, Settings, LogOut, Menu, X, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../../hooks'
@@ -19,6 +19,7 @@ const AdminLayout = () => {
     { path: '/admin', icon: Home, label: 'Dashboard', exact: true },
     { path: '/admin/animals', icon: PawPrint, label: 'Animales' },
     { path: '/admin/requests', icon: Inbox, label: 'Solicitudes' },
+    { path: '/admin/settings', icon: Settings, label: 'Configuración' },
   ]
 
   const isActive = (item) => {
