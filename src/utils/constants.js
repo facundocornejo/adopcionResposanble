@@ -26,7 +26,7 @@ export const ESTADOS_ANIMAL = [
   { value: 'Disponible', label: 'Disponible', color: 'sage' },
   { value: 'En proceso', label: 'En proceso', color: 'amber' },
   { value: 'Adoptado', label: 'Adoptado', color: 'purple' },
-  { value: 'En tránsito', label: 'En tránsito', color: 'sky' },
+  { value: 'En transito', label: 'En tránsito', color: 'sky' },
 ]
 
 // ============================================

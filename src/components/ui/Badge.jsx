@@ -72,7 +72,7 @@ Badge.getAnimalVariant = (estado) => {
     'Disponible': 'sage',
     'En proceso': 'amber',
     'Adoptado': 'purple',
-    'En tránsito': 'sky',
+    'En transito': 'sky',
   }
   return map[estado] || 'gray'
 }
@@ -83,7 +83,8 @@ Badge.getAnimalVariant = (estado) => {
 Badge.getRequestVariant = (estado) => {
   const map = {
     'Nueva': 'blue',
-    'Contactada': 'amber',
+    'Revisada': 'amber',
+    'En evaluación': 'sky',
     'Aprobada': 'sage',
     'Rechazada': 'red',
   }

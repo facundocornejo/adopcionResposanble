@@ -182,7 +182,7 @@ export const getAnimalStatusClass = (estado) => {
     'Disponible': 'badge-disponible',
     'En proceso': 'badge-en-proceso',
     'Adoptado': 'badge-adoptado',
-    'En tránsito': 'badge-en-transito',
+    'En transito': 'badge-en-transito',
   }
   return classes[estado] || 'bg-gray-100 text-gray-600'
 }
@@ -195,7 +195,8 @@ export const getAnimalStatusClass = (estado) => {
 export const getRequestStatusClass = (estado) => {
   const classes = {
     'Nueva': 'bg-blue-100 text-blue-700',
-    'Contactada': 'bg-amber-100 text-amber-700',
+    'Revisada': 'bg-amber-100 text-amber-700',
+    'En evaluación': 'bg-sky-100 text-sky-700',
     'Aprobada': 'bg-sage-100 text-sage-600',
     'Rechazada': 'bg-red-100 text-red-600',
   }

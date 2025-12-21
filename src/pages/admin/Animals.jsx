@@ -223,7 +223,7 @@ const Animals = () => {
                           ${animal.estado === 'Disponible' ? 'bg-sage-100 text-sage-700' : ''}
                           ${animal.estado === 'En proceso' ? 'bg-amber-100 text-amber-700' : ''}
                           ${animal.estado === 'Adoptado' ? 'bg-terracotta-100 text-terracotta-700' : ''}
-                          ${animal.estado === 'En tránsito' ? 'bg-sky-100 text-sky-700' : ''}
+                          ${animal.estado === 'En transito' ? 'bg-sky-100 text-sky-700' : ''}
                         `}
                       >
                         {ESTADOS_ANIMAL.map(e => (

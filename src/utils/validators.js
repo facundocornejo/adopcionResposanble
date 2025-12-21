@@ -201,7 +201,7 @@ export const animalSchema = z.object({
 
   estado_desparasitacion: z.boolean().optional().default(false),
 
-  estado: z.enum(['Disponible', 'En proceso', 'Adoptado', 'En tránsito'], {
+  estado: z.enum(['Disponible', 'En proceso', 'Adoptado', 'En transito'], {
     errorMap: () => ({ message: 'Seleccioná un estado' }),
   }),
 
