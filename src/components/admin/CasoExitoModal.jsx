@@ -65,7 +65,7 @@ const CasoExitoModal = ({ isOpen, onClose, animal, onSuccess }) => {
       const formData = new FormData()
       formData.append('image', file)
 
-      const response = await api.post('/upload', formData, {
+      const response = await api.post('/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
@@ -93,7 +93,7 @@ const CasoExitoModal = ({ isOpen, onClose, animal, onSuccess }) => {
     setIsSubmitting(true)
 
     try {
-      const response = await api.post('/casos-exito', {
+      const response = await api.post('/api/casos-exito', {
         animal_id: animal.id,
         titulo: data.titulo,
         historia: data.historia,

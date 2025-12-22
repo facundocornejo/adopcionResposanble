@@ -20,7 +20,7 @@ const CasosExito = () => {
   const fetchCasosExito = async () => {
     try {
       setLoading(true)
-      const response = await api.get('/casos-exito')
+      const response = await api.get('/api/casos-exito')
 
       if (response.data.success) {
         setOrganizaciones(response.data.data.organizaciones || [])
