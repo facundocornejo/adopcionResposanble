@@ -52,9 +52,10 @@ const AnimalForm = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(animalSchema),
+    mode: 'onSubmit',
     defaultValues: {
       nombre: '',
       especie: '',
@@ -228,7 +229,13 @@ const AnimalForm = () => {
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, (errors) => {
+        console.log('Errores de validación:', errors)
+        const firstError = Object.values(errors)[0]
+        if (firstError?.message) {
+          toast.error(firstError.message)
+        }
+      })}>
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Columna principal */}
           <div className="lg:col-span-2 space-y-6">
