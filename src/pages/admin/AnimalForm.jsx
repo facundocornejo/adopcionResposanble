@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, Upload, X, Save, Loader2 } from 'lucide-react'
+import { ArrowLeft, Upload, X, Save, Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { animalsService } from '../../services'
 import { animalSchema } from '../../utils/validators'
@@ -229,13 +229,33 @@ const AnimalForm = () => {
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit, (errors) => {
-        console.log('Errores de validación:', errors)
-        const firstError = Object.values(errors)[0]
-        if (firstError?.message) {
-          toast.error(firstError.message)
-        }
+      <form onSubmit={handleSubmit(onSubmit, (validationErrors) => {
+        console.log('Errores de validación:', validationErrors)
+        const errorCount = Object.keys(validationErrors).length
+        toast.error(`Hay ${errorCount} campo(s) con errores. Revisá el formulario.`)
       })}>
+        {/* Mensaje de campos obligatorios */}
+        <p className="text-sm text-brown-500 mb-4">
+          Los campos marcados con <span className="text-red-500">*</span> son obligatorios
+        </p>
+
+        {/* Resumen de errores */}
+        {Object.keys(errors).length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-medium text-red-800">Por favor corregí los siguientes errores:</h3>
+                <ul className="mt-2 text-sm text-red-700 list-disc list-inside space-y-1">
+                  {Object.entries(errors).map(([field, error]) => (
+                    <li key={field}>{error.message}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Columna principal */}
           <div className="lg:col-span-2 space-y-6">
@@ -309,7 +329,7 @@ const AnimalForm = () => {
 
               <div className="space-y-4">
                 <Input
-                  label="Nombre"
+                  label="Nombre *"
                   placeholder="Nombre del animal"
                   error={errors.nombre?.message}
                   {...register('nombre')}
@@ -317,13 +337,13 @@ const AnimalForm = () => {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Select
-                    label="Especie"
+                    label="Especie *"
                     options={ESPECIES_OPTIONS}
                     error={errors.especie?.message}
                     {...register('especie')}
                   />
                   <Select
-                    label="Sexo"
+                    label="Sexo *"
                     options={SEXOS}
                     error={errors.sexo?.message}
                     {...register('sexo')}
@@ -332,13 +352,13 @@ const AnimalForm = () => {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Select
-                    label="Tamaño"
+                    label="Tamaño *"
                     options={TAMANIOS_OPTIONS}
                     error={errors.tamanio?.message}
                     {...register('tamanio')}
                   />
                   <Input
-                    label="Edad aproximada"
+                    label="Edad aproximada *"
                     placeholder="Ej: 2 años, 6 meses, cachorro"
                     error={errors.edad_aproximada?.message}
                     {...register('edad_aproximada')}
@@ -346,7 +366,7 @@ const AnimalForm = () => {
                 </div>
 
                 <Select
-                  label="Estado"
+                  label="Estado *"
                   options={ESTADOS_OPTIONS}
                   error={errors.estado?.message}
                   {...register('estado')}
@@ -360,8 +380,8 @@ const AnimalForm = () => {
 
               <div className="space-y-4">
                 <Textarea
-                  label="Historia de rescate"
-                  placeholder="Contá cómo llegó este animalito, su personalidad, qué le gusta..."
+                  label="Historia de rescate *"
+                  placeholder="Contá cómo llegó este animalito, su personalidad, qué le gusta... (mínimo 20 caracteres)"
                   rows={5}
                   maxLength={2000}
                   error={errors.descripcion_historia?.message}
@@ -369,8 +389,8 @@ const AnimalForm = () => {
                 />
 
                 <Textarea
-                  label="Necesidades especiales (opcional)"
-                  placeholder="Si tiene alguna condición médica, tratamiento, dieta especial..."
+                  label="Necesidades especiales"
+                  placeholder="Si tiene alguna condición médica, tratamiento, dieta especial... (opcional)"
                   rows={3}
                   maxLength={500}
                   error={errors.necesidades_especiales?.message}
@@ -432,13 +452,13 @@ const AnimalForm = () => {
 
               <div className="space-y-4">
                 <Input
-                  label="Publicado por"
+                  label="Publicado por *"
                   placeholder="Nombre del refugio o rescatista"
                   error={errors.publicado_por?.message}
                   {...register('publicado_por')}
                 />
                 <Input
-                  label="Contacto"
+                  label="Contacto *"
                   placeholder="Email o teléfono de contacto"
                   error={errors.contacto_rescatista?.message}
                   {...register('contacto_rescatista')}
