@@ -129,6 +129,11 @@ const AdoptionForm = () => {
     const fieldsToValidate = Object.keys(currentStepConfig.schema.shape)
 
     const isValid = await trigger(fieldsToValidate)
+
+    if (!isValid) {
+      toast.error('Por favor completá todos los campos obligatorios')
+    }
+
     return isValid
   }
 
@@ -406,6 +411,28 @@ const AdoptionForm = () => {
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="mb-6">
+          {/* Mensaje de campos obligatorios */}
+          <p className="text-sm text-brown-500 mb-4">
+            Todos los campos marcados con <span className="text-red-500">*</span> son obligatorios
+          </p>
+
+          {/* Resumen de errores del paso actual */}
+          {Object.keys(errors).length > 0 && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-medium text-red-800">Por favor completá los campos obligatorios:</h3>
+                  <ul className="mt-2 text-sm text-red-700 list-disc list-inside space-y-1">
+                    {Object.entries(errors).map(([field, error]) => (
+                      <li key={field}>{error.message}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Step 1: Datos Personales */}
           {currentStep === 1 && (
             <div className="space-y-4">
@@ -414,16 +441,16 @@ const AdoptionForm = () => {
               </h2>
 
               <Input
-                label="Nombre completo"
+                label="Nombre completo *"
                 placeholder="Tu nombre y apellido"
                 error={errors.nombre_completo?.message}
                 {...register('nombre_completo')}
               />
 
               <Input
-                label="Edad"
+                label="Edad *"
                 type="number"
-                placeholder="Tu edad"
+                placeholder="Tu edad (mínimo 18 años)"
                 min={18}
                 max={120}
                 error={errors.edad?.message}
@@ -431,7 +458,7 @@ const AdoptionForm = () => {
               />
 
               <Input
-                label="Email"
+                label="Email *"
                 type="email"
                 placeholder="tu@email.com"
                 error={errors.email?.message}
@@ -439,7 +466,7 @@ const AdoptionForm = () => {
               />
 
               <Input
-                label="Teléfono / WhatsApp"
+                label="Teléfono / WhatsApp *"
                 type="tel"
                 placeholder="+54 9 343 123-4567"
                 error={errors.telefono_whatsapp?.message}
@@ -447,7 +474,7 @@ const AdoptionForm = () => {
               />
 
               <Input
-                label="Ciudad / Zona"
+                label="Ciudad / Zona *"
                 placeholder="Ej: Paraná Centro"
                 error={errors.ciudad_zona?.message}
                 {...register('ciudad_zona')}
@@ -463,7 +490,7 @@ const AdoptionForm = () => {
               </h2>
 
               <Select
-                label="Tipo de vivienda"
+                label="Tipo de vivienda *"
                 options={TIPOS_VIVIENDA}
                 error={errors.tipo_vivienda?.message}
                 {...register('tipo_vivienda')}
@@ -471,7 +498,7 @@ const AdoptionForm = () => {
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-brown-700">
-                  ¿Es vivienda propia?
+                  ¿Es vivienda propia? *
                 </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -539,7 +566,7 @@ const AdoptionForm = () => {
               )}
 
               <Input
-                label="¿Cuántas personas viven en tu hogar?"
+                label="¿Cuántas personas viven en tu hogar? *"
                 type="number"
                 placeholder="Incluyéndote"
                 min={0}
@@ -549,7 +576,7 @@ const AdoptionForm = () => {
               />
 
               <Checkbox
-                label="Todos los convivientes están de acuerdo con la adopción"
+                label="Todos los convivientes están de acuerdo con la adopción *"
                 error={errors.todos_de_acuerdo?.message}
                 {...register('todos_de_acuerdo')}
               />
@@ -566,7 +593,7 @@ const AdoptionForm = () => {
               {/* Hay niños */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-brown-700">
-                  ¿Hay niños en el hogar?
+                  ¿Hay niños en el hogar? *
                 </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -613,7 +640,7 @@ const AdoptionForm = () => {
               {/* Tiene otros animales */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-brown-700">
-                  ¿Tenés otros animales actualmente?
+                  ¿Tenés otros animales actualmente? *
                 </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -701,8 +728,8 @@ const AdoptionForm = () => {
               </h2>
 
               <Textarea
-                label="¿Tenés experiencia con mascotas?"
-                placeholder="Contanos sobre tu experiencia previa con animales..."
+                label="¿Tenés experiencia con mascotas? *"
+                placeholder="Contanos sobre tu experiencia previa con animales... (mínimo 10 caracteres)"
                 rows={3}
                 maxLength={500}
                 error={errors.experiencia_previa?.message}
@@ -710,8 +737,8 @@ const AdoptionForm = () => {
               />
 
               <Textarea
-                label={`¿Por qué querés adoptar a ${animal.nombre}?`}
-                placeholder="Contanos qué te motivó a querer adoptarlo/a..."
+                label={`¿Por qué querés adoptar a ${animal.nombre}? *`}
+                placeholder="Contanos qué te motivó a querer adoptarlo/a... (mínimo 20 caracteres)"
                 rows={4}
                 maxLength={1000}
                 error={errors.motivacion?.message}
@@ -719,16 +746,16 @@ const AdoptionForm = () => {
               />
 
               <div className="pt-4 border-t border-brown-100 space-y-3">
-                <h3 className="font-medium text-brown-900">Compromisos</h3>
+                <h3 className="font-medium text-brown-900">Compromisos obligatorios</h3>
 
                 <Checkbox
-                  label="Me comprometo a castrar al animal si no lo está (es obligatorio)"
+                  label="Me comprometo a castrar al animal si no lo está *"
                   error={errors.compromiso_castracion?.message}
                   {...register('compromiso_castracion')}
                 />
 
                 <Checkbox
-                  label="Acepto el seguimiento post-adopción y enviar fotos/actualizaciones"
+                  label="Acepto el seguimiento post-adopción y enviar fotos/actualizaciones *"
                   error={errors.compromiso_seguimiento?.message}
                   {...register('compromiso_seguimiento')}
                 />
