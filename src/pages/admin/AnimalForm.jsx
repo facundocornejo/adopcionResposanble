@@ -481,7 +481,7 @@ const RadioGroup = ({ label, name, register }) => (
         <input
           type="radio"
           value="true"
-          {...register(name, { setValueAs: v => v === 'true' ? true : v === 'false' ? false : null })}
+          {...register(name)}
           className="w-4 h-4 text-terracotta-500"
         />
         <span className="text-sm text-brown-700">Sí</span>
@@ -490,7 +490,7 @@ const RadioGroup = ({ label, name, register }) => (
         <input
           type="radio"
           value="false"
-          {...register(name, { setValueAs: v => v === 'true' ? true : v === 'false' ? false : null })}
+          {...register(name)}
           className="w-4 h-4 text-terracotta-500"
         />
         <span className="text-sm text-brown-700">No</span>
@@ -499,7 +499,7 @@ const RadioGroup = ({ label, name, register }) => (
         <input
           type="radio"
           value=""
-          {...register(name, { setValueAs: v => v === 'true' ? true : v === 'false' ? false : null })}
+          {...register(name)}
           className="w-4 h-4 text-terracotta-500"
         />
         <span className="text-sm text-brown-700">No sé</span>

@@ -161,6 +161,20 @@ export const adoptionStep4Schema = adoptionSchema.pick({
   compromiso_seguimiento: true,
 })
 
+// Helper para convertir string a boolean o null
+const stringToBoolean = z.preprocess((val) => {
+  if (val === 'true' || val === true) return true
+  if (val === 'false' || val === false) return false
+  if (val === '' || val === null || val === undefined) return null
+  return val
+}, z.boolean().nullable().optional())
+
+// Helper para checkbox (siempre boolean)
+const checkboxBoolean = z.preprocess((val) => {
+  if (val === 'true' || val === true || val === 'on') return true
+  return false
+}, z.boolean())
+
 // ============================================
 // VALIDADOR: FORMULARIO DE ANIMAL (admin)
 // ============================================
@@ -192,14 +206,14 @@ export const animalSchema = z.object({
     .optional()
     .nullable(),
 
-  estado_castracion: z.boolean().optional().default(false),
+  estado_castracion: checkboxBoolean,
 
   estado_vacunacion: z
     .string()
     .optional()
     .nullable(),
 
-  estado_desparasitacion: z.boolean().optional().default(false),
+  estado_desparasitacion: checkboxBoolean,
 
   estado: z.enum(['Disponible', 'En proceso', 'Adoptado', 'En transito'], {
     errorMap: () => ({ message: 'Seleccioná un estado' }),
@@ -215,10 +229,10 @@ export const animalSchema = z.object({
     .optional()
     .nullable(),
 
-  // Socialización
-  socializa_perros: z.boolean().optional().nullable(),
-  socializa_gatos: z.boolean().optional().nullable(),
-  socializa_ninos: z.boolean().optional().nullable(),
+  // Socialización (radio buttons: Sí/No/No sé)
+  socializa_perros: stringToBoolean,
+  socializa_gatos: stringToBoolean,
+  socializa_ninos: stringToBoolean,
 
   // Contacto del rescatista
   publicado_por: z
