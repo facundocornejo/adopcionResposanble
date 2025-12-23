@@ -14,6 +14,28 @@ export const loginSchema = z.object({
     .min(6, 'La contraseña debe tener al menos 6 caracteres'),
 })
 
+// Helper para convertir string a boolean (para radio buttons en adopción)
+const stringToBooleanRequired = z.preprocess((val) => {
+  if (val === 'true' || val === true) return true
+  if (val === 'false' || val === false) return false
+  return undefined // Para que falle la validación required
+}, z.boolean({
+  required_error: 'Este campo es obligatorio',
+}))
+
+const stringToBooleanOptional = z.preprocess((val) => {
+  if (val === 'true' || val === true) return true
+  if (val === 'false' || val === false) return false
+  if (val === '' || val === null || val === undefined) return null
+  return val
+}, z.boolean().nullable().optional())
+
+const literalTrue = z.preprocess((val) => {
+  if (val === 'true' || val === true) return true
+  if (val === 'false' || val === false) return false
+  return val
+}, z.literal(true))
+
 // ============================================
 // VALIDADOR: FORMULARIO DE ADOPCIÓN (17 campos)
 // ============================================
@@ -55,18 +77,13 @@ export const adoptionSchema = z.object({
     { errorMap: () => ({ message: 'Seleccioná un tipo de vivienda' }) }
   ),
 
-  vivienda_propia: z.boolean({
-    required_error: 'Indicá si la vivienda es propia o alquilada',
-  }),
+  vivienda_propia: stringToBooleanRequired,
 
-  permite_mascotas: z
-    .boolean()
-    .optional()
-    .nullable(),
+  permite_mascotas: stringToBooleanOptional,
 
   // Convivencia
-  todos_de_acuerdo: z.literal(true, {
-    errorMap: () => ({ message: 'Todos los convivientes deben estar de acuerdo' }),
+  todos_de_acuerdo: literalTrue.refine(val => val === true, {
+    message: 'Todos los convivientes deben estar de acuerdo',
   }),
 
   cantidad_convivientes: z
@@ -77,9 +94,7 @@ export const adoptionSchema = z.object({
     .min(0, 'El número no puede ser negativo')
     .max(20, 'Ingresá un número válido'),
 
-  hay_ninos: z.boolean({
-    required_error: 'Indicá si hay niños en el hogar',
-  }),
+  hay_ninos: stringToBooleanRequired,
 
   edades_ninos: z
     .string()
@@ -87,19 +102,14 @@ export const adoptionSchema = z.object({
     .nullable(),
 
   // Otros animales
-  tiene_otros_animales: z.boolean({
-    required_error: 'Indicá si tenés otros animales',
-  }),
+  tiene_otros_animales: stringToBooleanRequired,
 
   descripcion_otros_animales: z
     .string()
     .optional()
     .nullable(),
 
-  otros_animales_castrados: z
-    .boolean()
-    .optional()
-    .nullable(),
+  otros_animales_castrados: stringToBooleanOptional,
 
   // Experiencia y motivación
   experiencia_previa: z
@@ -113,12 +123,12 @@ export const adoptionSchema = z.object({
     .min(20, 'Contanos un poco más sobre tu motivación (mínimo 20 caracteres)'),
 
   // Compromisos
-  compromiso_castracion: z.literal(true, {
-    errorMap: () => ({ message: 'Debés comprometerte a castrar al animal si no lo está' }),
+  compromiso_castracion: literalTrue.refine(val => val === true, {
+    message: 'Debés comprometerte a castrar al animal si no lo está',
   }),
 
-  compromiso_seguimiento: z.literal(true, {
-    errorMap: () => ({ message: 'Debés aceptar el seguimiento post-adopción' }),
+  compromiso_seguimiento: literalTrue.refine(val => val === true, {
+    message: 'Debés aceptar el seguimiento post-adopción',
   }),
 
   // Animal solicitado

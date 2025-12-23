@@ -207,7 +207,15 @@ const AdoptionForm = () => {
       setSubmitSuccess(true)
       toast.success('¡Solicitud enviada con éxito!')
     } catch (error) {
-      toast.error(error.message || 'Error al enviar la solicitud')
+      // Mostrar errores detallados del backend
+      if (error.response?.data?.error?.details) {
+        const details = error.response.data.error.details
+        details.forEach(detail => {
+          toast.error(detail.message)
+        })
+      } else {
+        toast.error(error.message || 'Error al enviar la solicitud')
+      }
     } finally {
       setIsSubmitting(false)
     }
