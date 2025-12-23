@@ -235,7 +235,7 @@ export const animalSchema = z.object({
   descripcion_historia: z
     .string()
     .min(1, 'La historia es obligatoria')
-    .min(20, 'Contanos más sobre la historia del animal (mínimo 20 caracteres)'),
+    .min(50, 'Contanos más sobre la historia del animal (mínimo 50 caracteres)'),
 
   necesidades_especiales: z
     .string()

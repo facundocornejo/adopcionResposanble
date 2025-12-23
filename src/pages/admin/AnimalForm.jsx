@@ -158,15 +158,48 @@ const AnimalForm = () => {
     setIsSubmitting(true)
 
     try {
+      // Primero subir las fotos nuevas a Cloudinary
+      const uploadedPhotoUrls = []
+
+      for (const photo of newPhotos) {
+        const formData = new FormData()
+        formData.append('file', photo.file)
+
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://adopcion-api.onrender.com'}/api/upload`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+          })
+
+          if (!response.ok) {
+            throw new Error('Error al subir imagen')
+          }
+
+          const result = await response.json()
+          if (result.data?.url) {
+            uploadedPhotoUrls.push(result.data.url)
+          }
+        } catch (uploadError) {
+          console.error('Error subiendo foto:', uploadError)
+          toast.error('Error al subir una de las fotos')
+        }
+      }
+
+      // Combinar fotos existentes + nuevas subidas
+      const allPhotos = [...existingPhotos, ...uploadedPhotoUrls]
+
       // Preparar datos para enviar como JSON
       const animalData = {
         ...data,
-        // Asignar fotos existentes a los campos correspondientes
-        foto_principal: existingPhotos[0] || data.foto_principal || null,
-        foto_2: existingPhotos[1] || null,
-        foto_3: existingPhotos[2] || null,
-        foto_4: existingPhotos[3] || null,
-        foto_5: existingPhotos[4] || null,
+        // Asignar fotos a los campos correspondientes
+        foto_principal: allPhotos[0] || null,
+        foto_2: allPhotos[1] || null,
+        foto_3: allPhotos[2] || null,
+        foto_4: allPhotos[3] || null,
+        foto_5: allPhotos[4] || null,
       }
 
       // Limpiar campos vacíos
@@ -186,7 +219,15 @@ const AnimalForm = () => {
 
       navigate('/admin/animals')
     } catch (err) {
-      toast.error(err.message || 'Error al guardar')
+      // Mostrar errores detallados del backend
+      if (err.response?.data?.error?.details) {
+        const details = err.response.data.error.details
+        details.forEach(detail => {
+          toast.error(detail.message)
+        })
+      } else {
+        toast.error(err.message || 'Error al guardar')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -381,7 +422,7 @@ const AnimalForm = () => {
               <div className="space-y-4">
                 <Textarea
                   label="Historia de rescate *"
-                  placeholder="Contá cómo llegó este animalito, su personalidad, qué le gusta... (mínimo 20 caracteres)"
+                  placeholder="Contá cómo llegó este animalito, su personalidad, qué le gusta... (mínimo 50 caracteres)"
                   rows={5}
                   maxLength={2000}
                   error={errors.descripcion_historia?.message}
