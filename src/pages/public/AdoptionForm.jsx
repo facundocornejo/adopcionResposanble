@@ -21,6 +21,7 @@ import {
   adoptionStep2Schema,
   adoptionStep3Schema,
   adoptionStep4Schema,
+  adoptionFormSchema,
 } from '../../utils/validators'
 import {
   Button,
@@ -86,7 +87,7 @@ const AdoptionForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  // Configurar React Hook Form
+  // Configurar React Hook Form con validación de Zod
   const {
     register,
     handleSubmit,
@@ -94,7 +95,8 @@ const AdoptionForm = () => {
     trigger,
     formState: { errors },
   } = useForm({
-    mode: 'onChange',
+    resolver: zodResolver(adoptionFormSchema),
+    mode: 'onTouched',
     defaultValues: {
       nombre_completo: '',
       edad: '',

@@ -129,6 +129,9 @@ export const adoptionSchema = z.object({
     .positive('ID de animal inválido'),
 })
 
+// Schema para el formulario (sin animal_id que se agrega en submit)
+export const adoptionFormSchema = adoptionSchema.omit({ animal_id: true })
+
 // Schema para validación parcial (por pasos del formulario)
 export const adoptionStep1Schema = adoptionSchema.pick({
   nombre_completo: true,
