@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast'
 import { animalsService } from '../../services'
 import { animalSchema } from '../../utils/validators'
 import { ESPECIES, TAMANIOS, ESTADOS_ANIMAL } from '../../utils/constants'
+import { useAuth } from '../../hooks'
 import {
   Button,
   Input,
@@ -36,7 +37,11 @@ const ESTADOS_OPTIONS = ESTADOS_ANIMAL
 const AnimalForm = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { admin } = useAuth()
   const isEditing = Boolean(id)
+
+  // Nombre de la organización del admin logueado
+  const organizacionNombre = admin?.organizacion?.nombre || ''
 
   const [isLoading, setIsLoading] = useState(isEditing)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -52,6 +57,7 @@ const AnimalForm = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(animalSchema),
@@ -72,7 +78,7 @@ const AnimalForm = () => {
       socializa_perros: null,
       socializa_gatos: null,
       socializa_ninos: null,
-      publicado_por: '',
+      publicado_por: organizacionNombre,
       contacto_rescatista: '',
       foto_principal: '',
     },
@@ -117,6 +123,13 @@ const AnimalForm = () => {
       fetchAnimal()
     }
   }, [id, isEditing, reset])
+
+  // Para nuevo animal: setear publicado_por con nombre de organización
+  useEffect(() => {
+    if (!isEditing && organizacionNombre) {
+      setValue('publicado_por', organizacionNombre)
+    }
+  }, [isEditing, organizacionNombre, setValue])
 
   // Manejar selección de fotos
   const handlePhotoSelect = (e) => {
