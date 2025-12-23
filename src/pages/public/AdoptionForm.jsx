@@ -251,8 +251,8 @@ const AdoptionForm = () => {
     )
   }
 
-  // Animal no disponible
-  if (animal.estado !== 'Disponible') {
+  // Animal no disponible para adopción
+  if (animal.estado !== 'Disponible' && animal.estado !== 'En transito') {
     return (
       <div className="container-app py-16 text-center">
         <div className="text-6xl mb-4">💔</div>

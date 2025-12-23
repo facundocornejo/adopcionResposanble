@@ -8,7 +8,8 @@ import { Spinner, Alert } from '../../components/ui'
  * Hero emocional + filtros + grid de cards
  */
 // Filtros por defecto para la página pública
-const DEFAULT_FILTERS = { estado: 'Disponible' }
+// No filtramos por estado - el backend ya excluye los adoptados
+const DEFAULT_FILTERS = {}
 
 const Home = () => {
   const {
