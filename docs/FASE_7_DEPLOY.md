@@ -345,3 +345,20 @@ vercel env ls
 3. **PWA**: Convertir en Progressive Web App
 4. **Tests**: Agregar tests con Vitest
 5. **CI/CD**: GitHub Actions para lint/test antes del deploy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bugs a resolver, formulario de adopcion, y filtrado de animales en admin 
