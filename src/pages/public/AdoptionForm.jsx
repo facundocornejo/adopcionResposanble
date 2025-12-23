@@ -165,6 +165,9 @@ const AdoptionForm = () => {
     }
   }
 
+  // Helper para convertir valores booleanos (pueden venir como string o boolean)
+  const toBool = (val) => val === true || val === 'true'
+
   // Enviar formulario
   const onSubmit = async (data) => {
     setIsSubmitting(true)
@@ -172,11 +175,11 @@ const AdoptionForm = () => {
     try {
       // Construir descripción de convivientes para el backend
       let viveConDescripcion = `${data.cantidad_convivientes} persona(s)`
-      if (data.hay_ninos && data.edades_ninos) {
+      if (toBool(data.hay_ninos) && data.edades_ninos) {
         viveConDescripcion += `, con niños de ${data.edades_ninos}`
       }
-      if (!data.vivienda_propia) {
-        viveConDescripcion += data.permite_mascotas
+      if (!toBool(data.vivienda_propia)) {
+        viveConDescripcion += toBool(data.permite_mascotas)
           ? ' (alquila, permite mascotas)'
           : ' (alquila)'
       }
@@ -191,15 +194,15 @@ const AdoptionForm = () => {
         ciudad_zona: data.ciudad_zona,
         tipo_vivienda: data.tipo_vivienda,
         vive_solo_acompanado: viveConDescripcion,
-        todos_de_acuerdo: data.todos_de_acuerdo,
-        tiene_otros_animales: data.tiene_otros_animales,
-        otros_animales_castrados: data.tiene_otros_animales
-          ? (data.otros_animales_castrados ? 'Sí' : 'No')
+        todos_de_acuerdo: toBool(data.todos_de_acuerdo),
+        tiene_otros_animales: toBool(data.tiene_otros_animales),
+        otros_animales_castrados: toBool(data.tiene_otros_animales)
+          ? (toBool(data.otros_animales_castrados) ? 'Sí' : 'No')
           : null,
         experiencia_previa: data.experiencia_previa,
         puede_cubrir_gastos: true, // Asumimos que si llenan el form, pueden cubrir gastos
         motivacion: data.motivacion,
-        compromiso_castracion: data.compromiso_castracion,
+        compromiso_castracion: toBool(data.compromiso_castracion),
         acepta_contacto: true,
       }
 
@@ -515,9 +518,7 @@ const AdoptionForm = () => {
                     <input
                       type="radio"
                       value="true"
-                      {...register('vivienda_propia', {
-                        setValueAs: (v) => v === 'true',
-                      })}
+                      {...register('vivienda_propia')}
                       className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                     />
                     <span className="text-brown-700">Sí, es propia</span>
@@ -526,9 +527,7 @@ const AdoptionForm = () => {
                     <input
                       type="radio"
                       value="false"
-                      {...register('vivienda_propia', {
-                        setValueAs: (v) => v === 'true',
-                      })}
+                      {...register('vivienda_propia')}
                       className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                     />
                     <span className="text-brown-700">No, alquilo</span>
@@ -543,7 +542,7 @@ const AdoptionForm = () => {
               </div>
 
               {/* Campo condicional: permite mascotas (solo si alquila) */}
-              {viviendaPropia === false && (
+              {(viviendaPropia === false || viviendaPropia === 'false') && (
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-brown-700">
                     ¿El alquiler permite mascotas?
@@ -553,9 +552,7 @@ const AdoptionForm = () => {
                       <input
                         type="radio"
                         value="true"
-                        {...register('permite_mascotas', {
-                          setValueAs: (v) => v === 'true',
-                        })}
+                        {...register('permite_mascotas')}
                         className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                       />
                       <span className="text-brown-700">Sí</span>
@@ -564,9 +561,7 @@ const AdoptionForm = () => {
                       <input
                         type="radio"
                         value="false"
-                        {...register('permite_mascotas', {
-                          setValueAs: (v) => v === 'true',
-                        })}
+                        {...register('permite_mascotas')}
                         className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                       />
                       <span className="text-brown-700">No</span>
@@ -610,9 +605,7 @@ const AdoptionForm = () => {
                     <input
                       type="radio"
                       value="true"
-                      {...register('hay_ninos', {
-                        setValueAs: (v) => v === 'true',
-                      })}
+                      {...register('hay_ninos')}
                       className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                     />
                     <span className="text-brown-700">Sí</span>
@@ -621,9 +614,7 @@ const AdoptionForm = () => {
                     <input
                       type="radio"
                       value="false"
-                      {...register('hay_ninos', {
-                        setValueAs: (v) => v === 'true',
-                      })}
+                      {...register('hay_ninos')}
                       className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                     />
                     <span className="text-brown-700">No</span>
@@ -638,7 +629,7 @@ const AdoptionForm = () => {
               </div>
 
               {/* Edades de niños (condicional) */}
-              {hayNinos === true && (
+              {(hayNinos === true || hayNinos === 'true') && (
                 <Input
                   label="¿Qué edades tienen?"
                   placeholder="Ej: 5 y 8 años"
@@ -657,9 +648,7 @@ const AdoptionForm = () => {
                     <input
                       type="radio"
                       value="true"
-                      {...register('tiene_otros_animales', {
-                        setValueAs: (v) => v === 'true',
-                      })}
+                      {...register('tiene_otros_animales')}
                       className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                     />
                     <span className="text-brown-700">Sí</span>
@@ -668,9 +657,7 @@ const AdoptionForm = () => {
                     <input
                       type="radio"
                       value="false"
-                      {...register('tiene_otros_animales', {
-                        setValueAs: (v) => v === 'true',
-                      })}
+                      {...register('tiene_otros_animales')}
                       className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                     />
                     <span className="text-brown-700">No</span>
@@ -685,7 +672,7 @@ const AdoptionForm = () => {
               </div>
 
               {/* Campos condicionales para otros animales */}
-              {tieneOtrosAnimales === true && (
+              {(tieneOtrosAnimales === true || tieneOtrosAnimales === 'true') && (
                 <>
                   <Textarea
                     label="Contanos sobre ellos"
@@ -705,9 +692,7 @@ const AdoptionForm = () => {
                         <input
                           type="radio"
                           value="true"
-                          {...register('otros_animales_castrados', {
-                            setValueAs: (v) => v === 'true',
-                          })}
+                          {...register('otros_animales_castrados')}
                           className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                         />
                         <span className="text-brown-700">Sí, todos</span>
@@ -716,9 +701,7 @@ const AdoptionForm = () => {
                         <input
                           type="radio"
                           value="false"
-                          {...register('otros_animales_castrados', {
-                            setValueAs: (v) => v === 'true',
-                          })}
+                          {...register('otros_animales_castrados')}
                           className="w-4 h-4 text-terracotta-500 focus:ring-terracotta-500"
                         />
                         <span className="text-brown-700">No</span>
