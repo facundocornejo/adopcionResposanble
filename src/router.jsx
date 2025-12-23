@@ -1,37 +1,104 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, Component } from 'react'
 
 // Layout
 import PublicLayout from './components/layout/PublicLayout'
 import { ProtectedRoute } from './components/layout'
 import { Spinner } from './components/ui'
 
+// Función helper para lazy loading con retry automático
+const lazyWithRetry = (componentImport) => {
+  return lazy(async () => {
+    const maxRetries = 3
+    let lastError
+
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        return await componentImport()
+      } catch (error) {
+        lastError = error
+        // Esperar antes de reintentar (incrementando el tiempo)
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+      }
+    }
+
+    throw lastError
+  })
+}
+
+// Error Boundary para capturar errores de carga de chunks
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error cargando página:', error, errorInfo)
+  }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null })
+    window.location.reload()
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+          <div className="text-center max-w-md">
+            <div className="text-6xl mb-4">😿</div>
+            <h1 className="text-2xl font-bold text-brown-800 mb-2">
+              Error al cargar la página
+            </h1>
+            <p className="text-brown-600 mb-6">
+              Hubo un problema cargando esta sección. Puede ser un problema de conexión.
+            </p>
+            <button
+              onClick={this.handleRetry}
+              className="inline-flex items-center px-6 py-3 bg-terracotta-500 text-white rounded-xl font-medium hover:bg-terracotta-600 transition-colors"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
 // Páginas públicas (carga directa - son las principales)
 import Home from './pages/public/Home'
 
-// Páginas públicas con lazy loading
-const AnimalDetail = lazy(() => import('./pages/public/AnimalDetail'))
-const AdoptionForm = lazy(() => import('./pages/public/AdoptionForm'))
-const Nosotros = lazy(() => import('./pages/public/Nosotros'))
-const FAQ = lazy(() => import('./pages/public/FAQ'))
-const Terminos = lazy(() => import('./pages/public/Terminos'))
-const QuieroParticipar = lazy(() => import('./pages/public/QuieroParticipar'))
-const CasosExito = lazy(() => import('./pages/public/CasosExito'))
+// Páginas públicas con lazy loading y retry
+const AnimalDetail = lazyWithRetry(() => import('./pages/public/AnimalDetail'))
+const AdoptionForm = lazyWithRetry(() => import('./pages/public/AdoptionForm'))
+const Nosotros = lazyWithRetry(() => import('./pages/public/Nosotros'))
+const FAQ = lazyWithRetry(() => import('./pages/public/FAQ'))
+const Terminos = lazyWithRetry(() => import('./pages/public/Terminos'))
+const QuieroParticipar = lazyWithRetry(() => import('./pages/public/QuieroParticipar'))
+const CasosExito = lazyWithRetry(() => import('./pages/public/CasosExito'))
 
-// Páginas admin con lazy loading (se cargan solo cuando se necesitan)
-const AdminLayout = lazy(() => import('./components/layout/AdminLayout'))
-const Login = lazy(() => import('./pages/admin/Login'))
-const Dashboard = lazy(() => import('./pages/admin/Dashboard'))
-const Animals = lazy(() => import('./pages/admin/Animals'))
-const AnimalForm = lazy(() => import('./pages/admin/AnimalForm'))
-const Requests = lazy(() => import('./pages/admin/Requests'))
-const RequestDetail = lazy(() => import('./pages/admin/RequestDetail'))
-const Settings = lazy(() => import('./pages/admin/Settings'))
+// Páginas admin con lazy loading y retry
+const AdminLayout = lazyWithRetry(() => import('./components/layout/AdminLayout'))
+const Login = lazyWithRetry(() => import('./pages/admin/Login'))
+const Dashboard = lazyWithRetry(() => import('./pages/admin/Dashboard'))
+const Animals = lazyWithRetry(() => import('./pages/admin/Animals'))
+const AnimalForm = lazyWithRetry(() => import('./pages/admin/AnimalForm'))
+const Requests = lazyWithRetry(() => import('./pages/admin/Requests'))
+const RequestDetail = lazyWithRetry(() => import('./pages/admin/RequestDetail'))
+const Settings = lazyWithRetry(() => import('./pages/admin/Settings'))
 
 // Páginas super-admin
-const SuperAdminOrganizations = lazy(() => import('./pages/admin/SuperAdminOrganizations'))
-const SuperAdminNewOrg = lazy(() => import('./pages/admin/SuperAdminNewOrg'))
-const SuperAdminContactRequests = lazy(() => import('./pages/admin/SuperAdminContactRequests'))
+const SuperAdminOrganizations = lazyWithRetry(() => import('./pages/admin/SuperAdminOrganizations'))
+const SuperAdminNewOrg = lazyWithRetry(() => import('./pages/admin/SuperAdminNewOrg'))
+const SuperAdminContactRequests = lazyWithRetry(() => import('./pages/admin/SuperAdminContactRequests'))
 
 // Componente de loading mientras cargan las páginas lazy
 const PageLoader = () => (
@@ -51,9 +118,10 @@ const ScrollToTop = () => {
 
 const AppRouter = () => {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <ScrollToTop />
-      <Routes>
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
+        <ScrollToTop />
+        <Routes>
         {/* Rutas públicas */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
@@ -109,8 +177,9 @@ const AppRouter = () => {
             </div>
           }
         />
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 
