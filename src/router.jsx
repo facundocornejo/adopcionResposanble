@@ -1,5 +1,5 @@
-import { Routes, Route } from 'react-router-dom'
-import { lazy, Suspense } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
 
 // Layout
 import PublicLayout from './components/layout/PublicLayout'
@@ -38,9 +38,21 @@ const PageLoader = () => (
   <Spinner center text="Cargando..." />
 )
 
+// Componente para hacer scroll al top en cada cambio de ruta
+const ScrollToTop = () => {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
+
 const AppRouter = () => {
   return (
     <Suspense fallback={<PageLoader />}>
+      <ScrollToTop />
       <Routes>
         {/* Rutas públicas */}
         <Route element={<PublicLayout />}>
