@@ -278,11 +278,13 @@ const RequestDetail = () => {
               </a>
 
               <a
-                href={`mailto:${request.email}?subject=Solicitud de adopción - ${request.animal?.nombre || ''}`}
+                href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(request.email)}&su=${encodeURIComponent(`Solicitud de adopción - ${request.animal?.nombre || ''}`)}&body=${encodeURIComponent(`Hola ${request.nombre_completo},\n\nGracias por tu interés en adoptar a ${request.animal?.nombre || 'nuestro animalito'}.\n\n`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full flex items-center justify-center gap-2 py-3 border border-brown-200 text-brown-700 rounded-xl font-medium hover:bg-warm-50 transition-colors"
               >
                 <Mail className="w-5 h-5" />
-                Enviar email
+                Enviar email (Gmail)
               </a>
 
               <hr className="border-brown-100 my-4" />
