@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Heart, Instagram, Facebook, Mail } from 'lucide-react'
+import { Heart, Instagram, Facebook, Mail, Github, Linkedin, Code } from 'lucide-react'
 
 /**
  * Footer del sitio público
@@ -141,6 +141,39 @@ const Footer = () => {
               <p className="flex items-center gap-1">
                 Hecho con <Heart className="w-4 h-4 text-terracotta-500" /> para los animales
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Crédito del desarrollador */}
+      <div className="bg-brown-950">
+        <div className="container-app py-3">
+          <div className="flex justify-center items-center gap-2 text-xs text-brown-500">
+            <Code className="w-3.5 h-3.5" />
+            <span>Desarrollado por</span>
+            <span className="text-brown-400 font-medium">Facundo Cornejo</span>
+            <div className="flex items-center gap-2 ml-1">
+              <a
+                href="https://github.com/facundocornejo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brown-500 hover:text-white transition-colors"
+                aria-label="GitHub"
+              >
+                <Github className="w-4 h-4" />
+              </a>
+              {/* LinkedIn - descomentar cuando tengas perfil
+              <a
+                href="https://linkedin.com/in/tu-perfil"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brown-500 hover:text-white transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+              */}
             </div>
           </div>
         </div>
