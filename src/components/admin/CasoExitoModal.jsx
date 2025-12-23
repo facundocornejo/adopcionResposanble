@@ -63,7 +63,7 @@ const CasoExitoModal = ({ isOpen, onClose, animal, onSuccess }) => {
 
     try {
       const formData = new FormData()
-      formData.append('image', file)
+      formData.append('file', file)
 
       const response = await api.post('/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
