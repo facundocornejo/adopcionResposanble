@@ -1,4 +1,5 @@
-import { MessageCircle, Facebook, Instagram, Share2, Copy } from 'lucide-react'
+import { FaWhatsapp, FaFacebookF, FaInstagram } from 'react-icons/fa'
+import { Share2, Copy } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import {
   generateShareMessage,
@@ -73,7 +74,7 @@ function ShareButtons({ animal, size = 'md', className = '' }: ShareButtonsProps
           className="p-2 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors"
           title="Compartir en WhatsApp"
         >
-          <MessageCircle className="w-4 h-4" />
+          <FaWhatsapp className="w-4 h-4" />
         </button>
         <button
           type="button"
@@ -81,7 +82,7 @@ function ShareButtons({ animal, size = 'md', className = '' }: ShareButtonsProps
           className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
           title="Compartir en Facebook"
         >
-          <Facebook className="w-4 h-4" />
+          <FaFacebookF className="w-4 h-4" />
         </button>
         <button
           type="button"
@@ -89,7 +90,7 @@ function ShareButtons({ animal, size = 'md', className = '' }: ShareButtonsProps
           className="p-2 rounded-full bg-pink-500 hover:bg-pink-600 text-white transition-colors"
           title={mobile ? 'Compartir en Instagram' : 'Copiar texto para Instagram'}
         >
-          <Instagram className="w-4 h-4" />
+          <FaInstagram className="w-4 h-4" />
         </button>
       </div>
     )
@@ -102,7 +103,7 @@ function ShareButtons({ animal, size = 'md', className = '' }: ShareButtonsProps
         onClick={handleWhatsApp}
         className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-colors"
       >
-        <MessageCircle className="w-5 h-5 flex-shrink-0" />
+        <FaWhatsapp className="w-5 h-5 flex-shrink-0" />
         <span>Compartir por WhatsApp</span>
       </button>
 
@@ -111,7 +112,7 @@ function ShareButtons({ animal, size = 'md', className = '' }: ShareButtonsProps
         onClick={handleFacebook}
         className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition-colors"
       >
-        <Facebook className="w-5 h-5 flex-shrink-0" />
+        <FaFacebookF className="w-5 h-5 flex-shrink-0" />
         <span>Compartir en Facebook</span>
       </button>
 
@@ -127,7 +128,7 @@ function ShareButtons({ animal, size = 'md', className = '' }: ShareButtonsProps
           </>
         ) : (
           <>
-            <Instagram className="w-5 h-5 flex-shrink-0" />
+            <FaInstagram className="w-5 h-5 flex-shrink-0" />
             <span>Copiar texto para Instagram</span>
           </>
         )}

@@ -128,6 +128,7 @@ function AnimalForm() {
       estado: 'Disponible',
       descripcion_historia: '',
       necesidades_especiales: '',
+      tipo_hogar_ideal: '',
       socializa_perros: null,
       socializa_gatos: null,
       socializa_ninos: null,
@@ -156,6 +157,7 @@ function AnimalForm() {
             estado: animal.estado || 'Disponible',
             descripcion_historia: animal.descripcion_historia || '',
             necesidades_especiales: animal.necesidades_especiales || '',
+            tipo_hogar_ideal: (animal as unknown as { tipo_hogar_ideal?: string | null }).tipo_hogar_ideal || '',
             socializa_perros: animal.socializa_perros,
             socializa_gatos: animal.socializa_gatos,
             socializa_ninos: animal.socializa_ninos,
@@ -265,6 +267,7 @@ function AnimalForm() {
         raza_mezcla: data.raza_mezcla || null,
         estado_vacunacion: data.estado_vacunacion || null,
         necesidades_especiales: data.necesidades_especiales || null,
+        tipo_hogar_ideal: data.tipo_hogar_ideal || null,
         // Asignar fotos a los campos correspondientes
         foto_principal: allPhotos[0] || '',
         foto_2: allPhotos[1] || null,
@@ -528,6 +531,15 @@ function AnimalForm() {
                   maxLength={500}
                   error={errors.necesidades_especiales?.message}
                   {...register('necesidades_especiales')}
+                />
+
+                <Textarea
+                  label="Hogar ideal"
+                  placeholder="Ej: Casa con patio, sin niños pequeños, debe dormir adentro, familia con tiempo..."
+                  rows={3}
+                  maxLength={500}
+                  error={errors.tipo_hogar_ideal?.message}
+                  {...register('tipo_hogar_ideal')}
                 />
               </div>
             </Card>

@@ -8,11 +8,15 @@ import {
   Cat,
   Check,
   X,
-  Instagram,
-  Facebook,
+  Home,
   CreditCard,
+  PawPrint,
 } from 'lucide-react'
+import { FaInstagram, FaFacebookF } from 'react-icons/fa'
+import { useEffect } from 'react'
 import { useAnimal } from '@/presentation/hooks'
+import { updateOGMeta, resetOGMeta } from '@/shared/utils/og-meta'
+import { truncate } from '@/shared/utils/formatters'
 import { AnimalGallery } from '@/presentation/components/animals'
 import { Button, Badge, Spinner, Alert, Card, ShareButtons } from '@/presentation/components/ui'
 import type { AnimalEstado, OrganizacionDetalle } from '@/domain/entities/animal'
@@ -35,6 +39,7 @@ interface AnimalWithOrg {
   socializa_gatos: boolean | null
   socializa_ninos: boolean | null
   necesidades_especiales?: string | null
+  tipo_hogar_ideal?: string | null
   estado: AnimalEstado
   publicado_por: string
   contacto_rescatista: string
@@ -96,6 +101,21 @@ function AnimalDetail() {
 
   // Cast a tipo con organización extendida
   const animalData = animal as AnimalWithOrg | null
+
+  // Actualizar meta tags OG para preview en redes sociales
+  useEffect(() => {
+    if (animalData) {
+      updateOGMeta({
+        title: `${animalData.nombre} busca hogar`,
+        description: animalData.descripcion_historia
+          ? truncate(animalData.descripcion_historia, 150)
+          : `${animalData.especie} · ${animalData.edad_aproximada} · ${animalData.estado}`,
+        image: animalData.foto_principal,
+        url: `${window.location.origin}/animal/${animalData.id}`,
+      })
+    }
+    return () => { resetOGMeta() }
+  }, [animalData])
 
   // Estado de carga
   if (isLoading) {
@@ -184,6 +204,12 @@ function AnimalDetail() {
                 {animalData.estado === 'En transito' ? 'En tránsito' : animalData.estado}
               </Badge>
             </div>
+            {animalData.raza_mezcla && (
+              <p className="text-sm text-brown-500 flex items-center gap-2">
+                <PawPrint className="w-4 h-4 flex-shrink-0" />
+                {animalData.raza_mezcla}
+              </p>
+            )}
             <p className="text-lg text-brown-500 flex items-center gap-2">
               <EspecieIcon className="w-5 h-5 flex-shrink-0" />
               {animalData.especie} · {animalData.sexo} · {animalData.edad_aproximada} · {animalData.tamanio}
@@ -266,6 +292,19 @@ function AnimalDetail() {
             </Card>
           )}
 
+          {/* Hogar ideal */}
+          {animalData.tipo_hogar_ideal && (
+            <Card>
+              <h2 className="text-xl font-semibold text-brown-900 mb-3 flex items-center gap-2">
+                <Home className="w-5 h-5 text-terracotta-500" />
+                Hogar ideal
+              </h2>
+              <p className="text-brown-700 leading-relaxed whitespace-pre-line">
+                {animalData.tipo_hogar_ideal}
+              </p>
+            </Card>
+          )}
+
           {/* Necesidades especiales */}
           {animalData.necesidades_especiales && (
             <Card>
@@ -339,7 +378,7 @@ function AnimalDetail() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors text-sm"
                     >
-                      <Instagram className="w-4 h-4" />
+                      <FaInstagram className="w-4 h-4" />
                       {organizacion.instagram}
                     </a>
                   )}
@@ -350,7 +389,7 @@ function AnimalDetail() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm"
                     >
-                      <Facebook className="w-4 h-4" />
+                      <FaFacebookF className="w-4 h-4" />
                       Facebook
                     </a>
                   )}

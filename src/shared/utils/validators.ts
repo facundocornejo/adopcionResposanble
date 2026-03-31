@@ -267,6 +267,8 @@ export const animalSchema = z.object({
 
   necesidades_especiales: z.string().optional().nullable(),
 
+  tipo_hogar_ideal: z.string().optional().nullable(),
+
   // Socialización
   socializa_perros: stringToBooleanOptional,
   socializa_gatos: stringToBooleanOptional,

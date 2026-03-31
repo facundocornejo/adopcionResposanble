@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Heart, Instagram, Facebook, Mail, Github, Code } from 'lucide-react'
+import { Heart, Mail, Github, Code } from 'lucide-react'
+import { FaInstagram, FaFacebookF } from 'react-icons/fa'
 import Logo from '../ui/Logo'
 
 function Footer() {
@@ -38,8 +39,8 @@ function Footer() {
               {/* Redes sociales */}
               <div className="flex gap-3 mt-5">
                 {[
-                  { href: 'https://instagram.com', icon: Instagram, label: 'Instagram' },
-                  { href: 'https://facebook.com', icon: Facebook, label: 'Facebook' },
+                  { href: 'https://instagram.com', icon: FaInstagram, label: 'Instagram' },
+                  { href: 'https://facebook.com', icon: FaFacebookF, label: 'Facebook' },
                   { href: 'mailto:proyectoperritos@hotmail.com', icon: Mail, label: 'Email' },
                 ].map((social) => (
                   <a
@@ -102,15 +103,15 @@ function Footer() {
         {/* Barra inferior */}
         <div className="border-t border-brown-800">
           <div className="container-app py-4">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-brown-400">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-brown-400 text-center">
               <p>© {currentYear} Adopta. Todos los derechos reservados.</p>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
                 <Link to="/terminos" className="hover:text-white transition-colors">
                   Términos y Condiciones
                 </Link>
-                <span className="text-brown-700">|</span>
+                <span className="hidden sm:inline text-brown-700">|</span>
                 <p className="flex items-center gap-1">
-                  Hecho con <Heart className="w-4 h-4 text-terracotta-500" /> para los animales
+                  Hecho con <Heart className="w-4 h-4 text-terracotta-500 fill-terracotta-500" /> para los animales
                 </p>
               </div>
             </div>

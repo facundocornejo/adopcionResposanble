@@ -30,7 +30,7 @@ export function generateShareMessage(animal: ShareableAnimal): string {
     ? `\n${truncate(animal.descripcion_historia, 100)}`
     : ''
 
-  return `🐾 ${animal.nombre} busca hogar!\n${animal.especie} - ${animal.edad_aproximada}.\nEstado: ${animal.estado}.${descripcion}\n\nMás info: ${url}`
+  return `🐾 ¡${animal.nombre} busca hogar!\n${animal.especie} · ${animal.edad_aproximada}\n\n👉 Conocé su historia: ${url}\n${descripcion}\n\nEstado: ${animal.estado}`
 }
 
 /**
