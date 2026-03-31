@@ -23,15 +23,16 @@ interface NavItem {
   path: string
   icon: LucideIcon
   label: string
+  shortLabel?: string
   exact?: boolean
 }
 
 const navItems: NavItem[] = [
-  { path: '/admin', icon: Home, label: 'Dashboard', exact: true },
+  { path: '/admin', icon: Home, label: 'Dashboard', shortLabel: 'Inicio', exact: true },
   { path: '/admin/animals', icon: PawPrint, label: 'Animales' },
   { path: '/admin/requests', icon: Inbox, label: 'Solicitudes' },
-  { path: '/admin/casos-exito', icon: Heart, label: 'Casos de Éxito' },
-  { path: '/admin/settings', icon: Settings, label: 'Configuración' },
+  { path: '/admin/casos-exito', icon: Heart, label: 'Casos de Éxito', shortLabel: 'Éxitos' },
+  { path: '/admin/settings', icon: Settings, label: 'Configuración', shortLabel: 'Config.' },
 ]
 
 function AdminLayout() {
@@ -227,19 +228,19 @@ function AdminLayout() {
 
       {/* Bottom Nav Mobile */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-brown-200 pb-safe z-40">
-        <div className="flex justify-around py-2">
+        <div className="flex justify-around py-1.5">
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-col items-center py-2 px-3 ${
+              className={`flex flex-col items-center py-1.5 px-1.5 min-w-0 ${
                 isActive(item)
                   ? 'text-terracotta-500'
                   : 'text-brown-500 hover:text-terracotta-500'
               }`}
             >
-              <item.icon className="w-6 h-6" />
-              <span className="text-xs mt-1">{item.label}</span>
+              <item.icon className="w-5 h-5" />
+              <span className="text-[10px] mt-0.5 truncate max-w-full">{item.shortLabel || item.label}</span>
             </Link>
           ))}
         </div>

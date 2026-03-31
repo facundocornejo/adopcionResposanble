@@ -171,27 +171,24 @@ function AnimalDetail() {
           <AnimalGallery fotos={fotos} nombre={animalData.nombre} />
 
           {/* Información principal */}
-          <div>
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-brown-900">
-                  {animalData.nombre}
-                </h1>
-                <p className="text-lg text-brown-500 mt-1 flex items-center gap-2">
-                  <EspecieIcon className="w-5 h-5" />
-                  {animalData.especie} · {animalData.sexo} · {animalData.edad_aproximada} · {animalData.tamanio}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShareButtons animal={animalData} size="sm" />
-                <Badge
-                  variant={Badge.getAnimalVariant(animalData.estado)}
-                  size="md"
-                >
-                  {animalData.estado === 'En transito' ? 'En tránsito' : animalData.estado}
-                </Badge>
-              </div>
+          <div className="space-y-2 mb-4">
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="text-3xl md:text-4xl font-bold text-brown-900">
+                {animalData.nombre}
+              </h1>
+              <Badge
+                variant={Badge.getAnimalVariant(animalData.estado)}
+                size="md"
+                className="flex-shrink-0"
+              >
+                {animalData.estado === 'En transito' ? 'En tránsito' : animalData.estado}
+              </Badge>
             </div>
+            <p className="text-lg text-brown-500 flex items-center gap-2">
+              <EspecieIcon className="w-5 h-5 flex-shrink-0" />
+              {animalData.especie} · {animalData.sexo} · {animalData.edad_aproximada} · {animalData.tamanio}
+            </p>
+            <ShareButtons animal={animalData} size="sm" />
           </div>
 
           {/* Historia */}
