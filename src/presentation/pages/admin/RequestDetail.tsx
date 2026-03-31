@@ -1,0 +1,390 @@
+import { useState, useEffect, type ChangeEvent } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Phone, Mail, User, Home, Users, Heart, Check, X, PawPrint, Trash2 } from 'lucide-react'
+import { toast } from 'react-hot-toast'
+import { requestApi } from '@/infrastructure/api/request-api'
+import { ESTADOS_SOLICITUD } from '@/shared/constants'
+import { formatDate, getWhatsAppLink } from '@/shared/utils/formatters'
+import { Button, Badge, Spinner, Alert, Card, Modal } from '@/presentation/components/ui'
+import type { SolicitudAdopcion, SolicitudEstado } from '@/domain/entities/adoption-request'
+
+interface InfoFieldProps {
+  label: string
+  value: string | number | null | undefined
+  className?: string
+  highlight?: boolean
+}
+
+/**
+ * Componente auxiliar para campos de info
+ */
+function InfoField({ label, value, className = '', highlight = false }: InfoFieldProps) {
+  return (
+    <div className={className}>
+      <p className="text-sm text-brown-500">{label}</p>
+      <p className={`font-medium ${highlight ? 'text-red-600' : 'text-brown-900'}`}>
+        {value || '-'}
+      </p>
+    </div>
+  )
+}
+
+/**
+ * Página de detalle de una solicitud de adopción
+ */
+function RequestDetail() {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+
+  const [request, setRequest] = useState<SolicitudAdopcion | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [newStatus, setNewStatus] = useState<SolicitudEstado>('Nueva')
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  useEffect(() => {
+    const fetchRequest = async () => {
+      if (!id) return
+
+      try {
+        const data = await requestApi.getById(id)
+        setRequest(data)
+        setNewStatus(data.estado_solicitud || 'Nueva')
+      } catch (err) {
+        const error = err as Error
+        setError(error.message || 'Error al cargar solicitud')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchRequest()
+  }, [id])
+
+  const handleStatusUpdate = async () => {
+    if (!request || !id || newStatus === request.estado_solicitud) return
+
+    setIsUpdating(true)
+    try {
+      await requestApi.updateStatus(id, newStatus)
+      setRequest(prev => prev ? { ...prev, estado_solicitud: newStatus } : null)
+      toast.success(`Estado actualizado a "${newStatus}"`)
+    } catch (err) {
+      const error = err as Error
+      toast.error(error.message || 'Error al actualizar')
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!id) return
+    setIsDeleting(true)
+    try {
+      await requestApi.delete(id)
+      toast.success('Solicitud eliminada')
+      navigate('/admin/requests')
+    } catch (err) {
+      const error = err as Error
+      toast.error(error.message || 'Error al eliminar')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  if (isLoading) {
+    return <Spinner center text="Cargando solicitud..." />
+  }
+
+  if (error || !request) {
+    return (
+      <div>
+        <Alert variant="error" title="Error">
+          {error || 'Solicitud no encontrada'}
+        </Alert>
+        <Link
+          to="/admin/requests"
+          className="inline-flex items-center text-terracotta-500 hover:text-terracotta-600 mt-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Volver a solicitudes
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="mb-6">
+        <Link
+          to="/admin/requests"
+          className="inline-flex items-center text-brown-500 hover:text-brown-700 mb-4 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Volver a solicitudes
+        </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-brown-900">
+              {request.nombre_completo}
+            </h1>
+            <p className="text-brown-500 text-sm mt-1">
+              Solicitud recibida el {formatDate(request.fecha_solicitud)}
+            </p>
+          </div>
+          <Badge variant={Badge.getRequestVariant(request.estado_solicitud)} size="md">
+            {request.estado_solicitud}
+          </Badge>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Info del solicitante */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Datos personales */}
+          <Card>
+            <div className="flex items-center gap-2 mb-4">
+              <User className="w-5 h-5 text-terracotta-500" />
+              <h2 className="text-lg font-semibold text-brown-900">
+                Datos del Solicitante
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <InfoField label="Nombre completo" value={request.nombre_completo} />
+              <InfoField label="Edad" value={`${request.edad} años`} />
+              <InfoField label="Email" value={request.email} />
+              <InfoField label="Teléfono/WhatsApp" value={request.telefono_whatsapp} />
+              <InfoField label="Ciudad/Zona" value={request.ciudad_zona} className="sm:col-span-2" />
+            </div>
+          </Card>
+
+          {/* Vivienda */}
+          <Card>
+            <div className="flex items-center gap-2 mb-4">
+              <Home className="w-5 h-5 text-terracotta-500" />
+              <h2 className="text-lg font-semibold text-brown-900">
+                Información de Vivienda
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <InfoField label="Tipo de vivienda" value={request.tipo_vivienda} />
+              <InfoField
+                label="¿Vivienda propia?"
+                value={request.vivienda_propia ? 'Sí' : 'No, alquila'}
+              />
+              {request.vivienda_propia === false && (
+                <InfoField
+                  label="¿Permite mascotas?"
+                  value={request.permite_mascotas ? 'Sí' : 'No'}
+                />
+              )}
+              <InfoField label="Cantidad de convivientes" value={request.cantidad_convivientes} />
+              <InfoField
+                label="Todos de acuerdo"
+                value={request.todos_de_acuerdo ? 'Sí' : 'No'}
+                highlight={!request.todos_de_acuerdo}
+              />
+            </div>
+          </Card>
+
+          {/* Convivencia */}
+          <Card>
+            <div className="flex items-center gap-2 mb-4">
+              <Users className="w-5 h-5 text-terracotta-500" />
+              <h2 className="text-lg font-semibold text-brown-900">
+                Convivencia
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <InfoField
+                label="¿Hay niños?"
+                value={request.hay_ninos ? `Sí - ${request.edades_ninos || 'edades no especificadas'}` : 'No'}
+              />
+              <InfoField
+                label="¿Tiene otros animales?"
+                value={request.tiene_otros_animales ? 'Sí' : 'No'}
+              />
+              {request.tiene_otros_animales && (
+                <>
+                  <InfoField
+                    label="Descripción"
+                    value={request.descripcion_otros_animales || 'No especificado'}
+                    className="sm:col-span-2"
+                  />
+                  <InfoField
+                    label="¿Están castrados?"
+                    value={request.otros_animales_castrados ? 'Sí' : 'No'}
+                  />
+                </>
+              )}
+            </div>
+          </Card>
+
+          {/* Motivación */}
+          <Card>
+            <div className="flex items-center gap-2 mb-4">
+              <Heart className="w-5 h-5 text-terracotta-500" />
+              <h2 className="text-lg font-semibold text-brown-900">
+                Experiencia y Motivación
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-brown-500 mb-1">Experiencia previa</p>
+                <p className="text-brown-700 whitespace-pre-line">{request.experiencia_previa}</p>
+              </div>
+              <div>
+                <p className="text-sm text-brown-500 mb-1">Motivación</p>
+                <p className="text-brown-700 whitespace-pre-line">{request.motivacion}</p>
+              </div>
+              <div className="flex gap-4 pt-2">
+                <div className="flex items-center gap-2">
+                  {request.compromiso_castracion ? (
+                    <Check className="w-4 h-4 text-sage-500" />
+                  ) : (
+                    <X className="w-4 h-4 text-red-500" />
+                  )}
+                  <span className="text-sm text-brown-600">Compromiso castración</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {request.compromiso_seguimiento ? (
+                    <Check className="w-4 h-4 text-sage-500" />
+                  ) : (
+                    <X className="w-4 h-4 text-red-500" />
+                  )}
+                  <span className="text-sm text-brown-600">Acepta seguimiento</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Animal solicitado */}
+          <Card>
+            <h2 className="text-lg font-semibold text-brown-900 mb-4">
+              Animal Solicitado
+            </h2>
+
+            {request.animal ? (
+              <>
+                {request.animal.foto_principal ? (
+                  <img
+                    src={request.animal.foto_principal}
+                    alt={request.animal.nombre}
+                    className="w-full aspect-square object-cover rounded-xl mb-3"
+                  />
+                ) : (
+                  <div className="w-full aspect-square bg-brown-100 rounded-xl mb-3 flex items-center justify-center">
+                    <PawPrint className="w-12 h-12 text-brown-300" />
+                  </div>
+                )}
+                <p className="font-medium text-brown-900">{request.animal.nombre}</p>
+                <p className="text-sm text-brown-500">
+                  {request.animal.especie} · {request.animal.tamanio} · {request.animal.edad_aproximada}
+                </p>
+                <Link
+                  to={`/animal/${request.animal_id}`}
+                  target="_blank"
+                  className="text-sm text-terracotta-500 hover:text-terracotta-600 mt-2 inline-block"
+                >
+                  Ver ficha completa →
+                </Link>
+              </>
+            ) : (
+              <p className="text-brown-500">Animal #{request.animal_id}</p>
+            )}
+          </Card>
+
+          {/* Acciones */}
+          <Card>
+            <h2 className="text-lg font-semibold text-brown-900 mb-4">
+              Acciones
+            </h2>
+
+            <div className="space-y-3">
+              <a
+                href={getWhatsAppLink(request.telefono_whatsapp, `Hola ${request.nombre_completo}, te contacto por tu solicitud de adopción de ${request.animal?.nombre || 'nuestro animal'}.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-sage-500 text-white rounded-xl font-medium hover:bg-sage-600 transition-colors"
+              >
+                <Phone className="w-5 h-5" />
+                Contactar por WhatsApp
+              </a>
+
+              <a
+                href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(request.email)}&su=${encodeURIComponent(`Solicitud de adopción - ${request.animal?.nombre || ''}`)}&body=${encodeURIComponent(`Hola ${request.nombre_completo},\n\nGracias por tu interés en adoptar a ${request.animal?.nombre || 'nuestro animalito'}.\n\n`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 py-3 border border-brown-200 text-brown-700 rounded-xl font-medium hover:bg-warm-50 transition-colors"
+              >
+                <Mail className="w-5 h-5" />
+                Enviar email (Gmail)
+              </a>
+
+              <hr className="border-brown-100 my-4" />
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-brown-700">
+                  Cambiar estado
+                </label>
+                <select
+                  value={newStatus}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) => setNewStatus(e.target.value as SolicitudEstado)}
+                  className="w-full px-4 py-3 border border-brown-200 rounded-xl focus:outline-none focus:border-terracotta-500 bg-white"
+                >
+                  {ESTADOS_SOLICITUD.map(e => (
+                    <option key={e.value} value={e.value}>{e.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <Button
+                onClick={handleStatusUpdate}
+                isLoading={isUpdating}
+                disabled={newStatus === request.estado_solicitud}
+                fullWidth
+              >
+                Actualizar estado
+              </Button>
+
+              <hr className="border-brown-100 my-4" />
+
+              <Button
+                variant="danger"
+                onClick={() => setShowDeleteConfirm(true)}
+                leftIcon={<Trash2 className="w-4 h-4" />}
+                fullWidth
+              >
+                Eliminar solicitud
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Modal de confirmación de eliminación */}
+      <Modal.Confirm
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Eliminar solicitud"
+        message={`¿Estás seguro de eliminar la solicitud de ${request.nombre_completo}? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="danger"
+        isLoading={isDeleting}
+      />
+    </div>
+  )
+}
+
+export default RequestDetail

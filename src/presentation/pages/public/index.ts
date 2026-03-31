@@ -1,0 +1,9 @@
+// Public Pages - Re-export all public pages
+export { default as Home } from './Home'
+export { default as FAQ } from './FAQ'
+export { default as Terminos } from './Terminos'
+export { default as Nosotros } from './Nosotros'
+export { default as AnimalDetail } from './AnimalDetail'
+export { default as AdoptionForm } from './AdoptionForm'
+export { default as CasosExito } from './CasosExito'
+export { default as QuieroParticipar } from './QuieroParticipar'
